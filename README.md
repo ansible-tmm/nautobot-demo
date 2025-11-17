@@ -2,12 +2,79 @@
 
 This repository demonstrates how to use Event-Driven Ansible (EDA) with Nautobot's changelog event source to automate workflows based on changes in Nautobot.
 
+⚡ **[Quick Start Guide →](QUICKSTART.md)** | Skip straight to the 5-minute setup!
+
+---
+
+## Table of Contents
+
+- [Nautobot Event-Driven Ansible Demo](#nautobot-event-driven-ansible-demo)
+  - [Table of Contents](#table-of-contents)
+  - [📋 Overview](#-overview)
+  - [📁 Repository Structure](#-repository-structure)
+  - [🚀 Prerequisites](#-prerequisites)
+    - [1. Required Software](#1-required-software)
+      - [Installing Java](#installing-java)
+    - [2. Nautobot API Token](#2-nautobot-api-token)
+  - [⚙️ Setup](#️-setup)
+    - [Step 1: Install the Collection](#step-1-install-the-collection)
+    - [Step 2: Configure Environment Variables](#step-2-configure-environment-variables)
+  - [🧪 Testing](#-testing)
+    - [Basic Test (Recommended First Step)](#basic-test-recommended-first-step)
+  - [🎯 Advanced Usage with AAP](#-advanced-usage-with-aap)
+  - [📝 Rulebook Files](#-rulebook-files)
+  - [🔧 Customization Ideas](#-customization-ideas)
+    - [Filter by Different Object Types](#filter-by-different-object-types)
+    - [Filter by Action](#filter-by-action)
+    - [Add Additional Filters](#add-additional-filters)
+  - [🏢 Integrating with Ansible Automation Platform](#-integrating-with-ansible-automation-platform)
+    - [1. Create a Decision Environment](#1-create-a-decision-environment)
+    - [2. Create an EDA Project](#2-create-an-eda-project)
+    - [3. Create Credentials](#3-create-credentials)
+    - [4. Create a Rulebook Activation](#4-create-a-rulebook-activation)
+    - [5. Test \& Monitor](#5-test--monitor)
+  - [📚 Event Structure Reference](#-event-structure-reference)
+  - [🔍 Troubleshooting](#-troubleshooting)
+    - [Java Not Found](#java-not-found)
+    - [Events Not Appearing](#events-not-appearing)
+    - [Collection Not Found](#collection-not-found)
+    - [Connection Errors](#connection-errors)
+  - [📖 Additional Resources](#-additional-resources)
+  - [🤝 Contributing](#-contributing)
+  - [📄 License](#-license)
+
+---
+
 ## 📋 Overview
 
 The demo includes:
 - **Basic test rulebook** - Prints all Nautobot changelog events (great for testing connectivity)
 - **Advanced AAP rulebook** - Reacts to specific device changes and triggers Ansible Automation Platform job templates
+- **Decision Environment** - Container image configuration for AAP EDA
 - Collection requirements and configuration examples
+
+## 📁 Repository Structure
+
+```
+nautobot-demo/
+├── extensions/eda/rulebooks/          # Rulebooks (AAP EDA standard location)
+│   ├── nautobot-changelog-test.yml    # Basic test rulebook
+│   ├── nautobot-changelog-aap.yml     # AAP job template trigger
+│   ├── nautobot-changelog-filtered.yml # Filtering examples
+│   └── nautobot-changelog-multi-action.yml # Multiple actions
+├── nautobot_de/                        # Decision Environment build files
+│   ├── execution-environment.yml
+│   ├── requirements.yml
+│   ├── bindep.txt
+│   └── README.md
+├── requirements.yml                    # Ansible collection dependencies
+├── env-template.txt                    # Environment variable template
+└── README.md                          # This file
+```
+
+**Why `extensions/eda/rulebooks/`?**
+
+Ansible Automation Platform follows a standard directory structure for EDA content. When you create a Project in AAP that points to this repository, AAP will automatically discover and display rulebooks located in `extensions/eda/rulebooks/`. This is the same structure used by Ansible collections that include EDA content.
 
 ## 🚀 Prerequisites
 
@@ -88,7 +155,7 @@ Start with the basic test rulebook to verify connectivity:
 
 ```bash
 ansible-rulebook \
-  -r nautobot-changelog-test.yml \
+  -r extensions/eda/rulebooks/nautobot-changelog-test.yml \
   -i localhost, \
   --verbose \
   --env-vars NAUTOBOT_URL,NAUTOBOT_TOKEN
@@ -126,7 +193,7 @@ The `nautobot-changelog-aap.yml` rulebook demonstrates real-world automation:
 
 ```bash
 ansible-rulebook \
-  -r nautobot-changelog-aap.yml \
+  -r extensions/eda/rulebooks/nautobot-changelog-aap.yml \
   -i localhost, \
   --verbose \
   --env-vars NAUTOBOT_URL,NAUTOBOT_TOKEN
@@ -146,12 +213,21 @@ condition: >
 
 ## 📝 Rulebook Files
 
+All rulebooks are located in `extensions/eda/rulebooks/` (AAP EDA standard location):
+
 | File | Purpose |
 |------|---------|
 | `nautobot-changelog-test.yml` | Basic test - prints all events |
 | `nautobot-changelog-aap.yml` | Advanced - triggers AAP job templates on device changes |
+| `nautobot-changelog-filtered.yml` | Examples with filters (tags, sites, object types) |
+| `nautobot-changelog-multi-action.yml` | Multiple actions (webhooks, different job templates) |
+
+**Other files:**
+| File | Purpose |
+|------|---------|
 | `requirements.yml` | Ansible collection dependencies |
 | `env-template.txt` | Environment variable template |
+| `nautobot_de/` | Decision Environment build configuration |
 
 ## 🔧 Customization Ideas
 
@@ -215,7 +291,11 @@ Either:
 
 ### 4. Create a Rulebook Activation
 1. Select your project
-2. Choose a rulebook (`nautobot-changelog-test.yml` or `nautobot-changelog-aap.yml`)
+2. Choose a rulebook:
+   - `nautobot-changelog-test.yml` (basic testing)
+   - `nautobot-changelog-aap.yml` (device automation)
+   - `nautobot-changelog-filtered.yml` (filtering examples)
+   - `nautobot-changelog-multi-action.yml` (multiple actions)
 3. Select your decision environment
 4. Add credentials/environment variables
 5. Enable the activation
@@ -339,8 +419,32 @@ curl -H "Authorization: Token $NAUTOBOT_TOKEN" \
 
 ## 🤝 Contributing
 
-Feel free to fork this repo and customize the rulebooks for your specific use cases!
+Contributions are welcome! Feel free to:
+- Fork this repository
+- Submit pull requests with improvements
+- Report issues or suggest enhancements
+- Share your use cases and customizations
+
+When contributing, please:
+1. Test your changes locally
+2. Update documentation as needed
+3. Follow existing code style and structure
+4. Provide clear commit messages
 
 ## 📄 License
 
-MIT
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+---
+
+**Disclaimer:** This project is provided as-is for demonstration and educational purposes. It is not officially supported by Red Hat or Network to Code. For production use, please review and test thoroughly in your environment.

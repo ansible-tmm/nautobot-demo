@@ -2,6 +2,8 @@
 
 Get up and running with Nautobot EDA in 5 minutes!
 
+**Note:** All rulebooks are located in `extensions/eda/rulebooks/` directory. This is the standard location that Ansible Automation Platform expects for EDA content.
+
 ## 1️⃣ Install Java (Required)
 
 ansible-rulebook needs Java to run:
@@ -50,7 +52,7 @@ export NAUTOBOT_TOKEN="your-api-token-here"
 ## 4️⃣ Run the Test Rulebook
 
 ```bash
-ansible-rulebook -r nautobot-changelog-test.yml -i localhost, --verbose --env-vars NAUTOBOT_URL,NAUTOBOT_TOKEN
+ansible-rulebook -r extensions/eda/rulebooks/nautobot-changelog-test.yml -i localhost, --verbose --env-vars NAUTOBOT_URL,NAUTOBOT_TOKEN
 ```
 
 ## 5️⃣ Test It!
@@ -75,8 +77,14 @@ Got Nautobot changelog event:
 
 ## 🎯 Next Steps
 
-- **Try filtering**: `ansible-rulebook -r nautobot-changelog-filtered.yml -i localhost, --verbose --env-vars NAUTOBOT_URL,NAUTOBOT_TOKEN`
-- **Test AAP integration**: Use `nautobot-changelog-aap.yml` (requires AAP setup)
-- **Customize**: Edit the rulebooks to match your workflow
+- **Try filtering**: `ansible-rulebook -r extensions/eda/rulebooks/nautobot-changelog-filtered.yml -i localhost, --verbose --env-vars NAUTOBOT_URL,NAUTOBOT_TOKEN`
+- **Test AAP integration**: Use `extensions/eda/rulebooks/nautobot-changelog-aap.yml` (requires AAP setup)
+- **Customize**: Edit the rulebooks in `extensions/eda/rulebooks/` to match your workflow
 
 📖 See [README.md](README.md) for full documentation!
+
+---
+
+## 📄 License
+
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.

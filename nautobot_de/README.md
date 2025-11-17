@@ -95,10 +95,11 @@ Test your Decision Environment before pushing:
 
 ```bash
 # Run a test rulebook
+# Note: Rulebooks are in extensions/eda/rulebooks/ directory
 podman run --rm -it \
   -e NAUTOBOT_URL="http://your-nautobot-url" \
   -e NAUTOBOT_TOKEN="your-token" \
-  -v $(pwd)/../nautobot-changelog-test.yml:/tmp/rulebook.yml:Z \
+  -v $(pwd)/../extensions/eda/rulebooks/nautobot-changelog-test.yml:/tmp/rulebook.yml:Z \
   nautobot-de:latest \
   ansible-rulebook \
     -r /tmp/rulebook.yml \
@@ -133,19 +134,26 @@ podman run --rm -it \
 ### 3. Create an EDA Project
 
 1. Go to **Projects** → **Add**
-2. Point to your Git repository containing the rulebooks
-3. Save
+2. Point to your Git repository (this repo)
+3. AAP will automatically discover rulebooks in `extensions/eda/rulebooks/`
+4. Save
 
 ### 4. Create a Rulebook Activation
 
 1. Go to **Rulebook Activations** → **Add**
 2. Select:
    - **Project**: Your nautobot-demo project
-   - **Rulebook**: `nautobot-changelog-test.yml` or `nautobot-changelog-aap.yml`
+   - **Rulebook**: Choose from discovered rulebooks:
+     - `nautobot-changelog-test.yml` (basic testing)
+     - `nautobot-changelog-aap.yml` (device automation)
+     - `nautobot-changelog-filtered.yml` (filtering examples)
+     - `nautobot-changelog-multi-action.yml` (multiple actions)
    - **Decision Environment**: `Nautobot Decision Environment`
    - **Credentials**: `Nautobot API`
 3. Enable the activation
 4. Monitor the logs!
+
+**Note:** AAP automatically discovers rulebooks from `extensions/eda/rulebooks/` directory.
 
 ## 🔧 Customization
 
@@ -231,3 +239,9 @@ After building and pushing:
 ---
 
 **Questions?** Check the main [README.md](../README.md) in the parent directory for the complete demo documentation.
+
+---
+
+## 📄 License
+
+Licensed under the Apache License, Version 2.0. See [LICENSE](../LICENSE) for details.
