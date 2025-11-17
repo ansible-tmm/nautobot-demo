@@ -1,0 +1,4 @@
+---
+collections:
+  - name: networktocode.nautobot
+    version: ">=5.0.0"

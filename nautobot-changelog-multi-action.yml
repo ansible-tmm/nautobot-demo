@@ -1,0 +1,63 @@
+---
+# Multi-action rulebook - demonstrates different actions based on events
+- name: Multi-action Nautobot automation
+  hosts: all
+  sources:
+    - networktocode.nautobot.nautobot_changelog:
+        instance: "{{ NAUTOBOT_URL }}"
+        token: "{{ NAUTOBOT_TOKEN }}"
+        interval: 5
+
+  rules:
+    # Send device changes to a webhook
+    - name: Device change - send to webhook
+      condition: >
+        event.changed_object_type == "dcim.device"
+        and event.action.value in ["create", "update"]
+      action:
+        post_event:
+          event:
+            device_name: "{{ event.changed_object.name }}"
+            device_id: "{{ event.changed_object.id }}"
+            action: "{{ event.action.value }}"
+            timestamp: "{{ event.time }}"
+            user: "{{ event.user.username }}"
+
+    # New device - run AAP job template for initial configuration
+    - name: New device - auto configure
+      condition: >
+        event.changed_object_type == "dcim.device"
+        and event.action.value == "create"
+      action:
+        run_job_template:
+          name: "Initial Device Configuration"
+          organization: "Default"
+          extra_vars:
+            device_name: "{{ event.changed_object.name }}"
+            device_id: "{{ event.changed_object.id }}"
+
+    # Device updated - run compliance check
+    - name: Device updated - compliance check
+      condition: >
+        event.changed_object_type == "dcim.device"
+        and event.action.value == "update"
+      action:
+        run_job_template:
+          name: "Device Compliance Check"
+          organization: "Default"
+          extra_vars:
+            device_name: "{{ event.changed_object.name }}"
+            device_id: "{{ event.changed_object.id }}"
+
+    # IP address created - run IPAM validation
+    - name: IP address created - validate
+      condition: >
+        event.changed_object_type == "ipam.ipaddress"
+        and event.action.value == "create"
+      action:
+        run_job_template:
+          name: "IPAM Validation"
+          organization: "Default"
+          extra_vars:
+            ip_address: "{{ event.changed_object.address }}"
+            ip_id: "{{ event.changed_object.id }}"

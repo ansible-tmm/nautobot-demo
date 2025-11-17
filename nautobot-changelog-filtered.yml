@@ -1,0 +1,71 @@
+---
+# Advanced filtering rulebook - demonstrates multiple conditions and filters
+- name: React to filtered Nautobot changes
+  hosts: all
+  sources:
+    - networktocode.nautobot.nautobot_changelog:
+        instance: "{{ NAUTOBOT_URL }}"
+        token: "{{ NAUTOBOT_TOKEN }}"
+        interval: 5
+
+  rules:
+    # Rule 1: Production device changes
+    - name: Production device created or updated
+      condition: >
+        event.changed_object_type == "dcim.device"
+        and event.action.value in ["create", "update"]
+        and "production" in event.changed_object.tags
+      action:
+        debug:
+          msg:
+            - "🚨 PRODUCTION device change detected!"
+            - "Device: {{ event.changed_object.name }}"
+            - "Action: {{ event.action.value }}"
+            - "User: {{ event.user.username }}"
+
+    # Rule 2: IP address assignments
+    - name: IP address created
+      condition: >
+        event.changed_object_type == "ipam.ipaddress"
+        and event.action.value == "create"
+      action:
+        debug:
+          msg:
+            - "📍 New IP address created"
+            - "Address: {{ event.changed_object.address }}"
+            - "Status: {{ event.changed_object.status }}"
+
+    # Rule 3: Site changes
+    - name: Site updated or created
+      condition: >
+        event.changed_object_type == "dcim.site"
+        and event.action.value in ["create", "update"]
+      action:
+        debug:
+          msg:
+            - "🏢 Site change detected"
+            - "Site: {{ event.changed_object.name }}"
+            - "Action: {{ event.action.value }}"
+
+    # Rule 4: Circuit changes
+    - name: Circuit changes
+      condition: >
+        event.changed_object_type == "circuits.circuit"
+      action:
+        debug:
+          msg:
+            - "🔌 Circuit change detected"
+            - "Circuit: {{ event.changed_object.cid }}"
+            - "Action: {{ event.action.value }}"
+
+    # Rule 5: Catch-all for any delete operations
+    - name: Deletion detected
+      condition: >
+        event.action.value == "delete"
+      action:
+        debug:
+          msg:
+            - "⚠️  DELETION detected!"
+            - "Type: {{ event.changed_object_type }}"
+            - "User: {{ event.user.username }}"
+            - "Time: {{ event.time }}"

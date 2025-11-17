@@ -1,0 +1,5 @@
+# Nautobot Configuration
+# Copy these lines and export them in your shell
+
+export NAUTOBOT_URL=https://nautobot.example.com
+export NAUTOBOT_TOKEN=your-api-token-here

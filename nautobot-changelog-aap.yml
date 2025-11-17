@@ -1,0 +1,22 @@
+---
+# Advanced rulebook - reacts to device changes and triggers AAP job template
+- name: React to Nautobot device changes
+  hosts: all
+  sources:
+    - networktocode.nautobot.nautobot_changelog:
+        instance: "{{ NAUTOBOT_URL }}"
+        token: "{{ NAUTOBOT_TOKEN }}"
+        interval: 5
+  rules:
+    - name: Device created or updated
+      condition: >
+        event.changed_object_type == "dcim.device"
+        and event.action.value in ["create", "update"]
+      action:
+        run_job_template:
+          name: "Configure device from Nautobot"
+          organization: "Default"
+          extra_vars:
+            device_name: "{{ event.changed_object.name }}"
+            device_id: "{{ event.changed_object.id }}"
+            change_id: "{{ event.id }}"

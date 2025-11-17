@@ -1,0 +1,16 @@
+---
+version: 3
+
+images:
+  base_image:
+    name: quay.io/ansible/ansible-rulebook:latest
+
+dependencies:
+  galaxy: requirements.yml
+  system: bindep.txt
+
+additional_build_steps:
+  prepend_final:
+    - RUN /usr/bin/python3.11 -m pip install --user --no-cache-dir importlib-metadata
+  append_final:
+    - RUN echo "Nautobot Decision Environment build complete"

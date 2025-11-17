@@ -1,0 +1,17 @@
+---
+# Basic test rulebook - prints all Nautobot changelog events
+- name: Listen for Nautobot changelog events
+  hosts: all
+  sources:
+    - networktocode.nautobot.nautobot_changelog:
+        instance: "{{ NAUTOBOT_URL }}"
+        token: "{{ NAUTOBOT_TOKEN }}"
+        interval: 5   # seconds between polls
+  rules:
+    - name: Print every event
+      condition: event.created is defined or event.host is defined
+      action:
+        debug:
+          msg:
+            - "Got Nautobot changelog event (object_data):"
+            - "{{ event }}"

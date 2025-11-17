@@ -1,0 +1,2 @@
+# No additional Python packages needed
+# The base ansible-rulebook image includes all required dependencies
