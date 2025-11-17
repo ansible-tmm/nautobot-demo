@@ -29,10 +29,11 @@ This repository demonstrates how to use Event-Driven Ansible (EDA) with Nautobot
     - [Add Additional Filters](#add-additional-filters)
   - [🏢 Integrating with Ansible Automation Platform](#-integrating-with-ansible-automation-platform)
     - [1. Create a Decision Environment](#1-create-a-decision-environment)
-    - [2. Create an EDA Project](#2-create-an-eda-project)
-    - [3. Create Credentials](#3-create-credentials)
-    - [4. Create a Rulebook Activation](#4-create-a-rulebook-activation)
-    - [5. Test \& Monitor](#5-test--monitor)
+    - [2. Create a Custom Credential Type (Nautobot)](#2-create-a-custom-credential-type-nautobot)
+    - [3. Create an EDA Project](#3-create-an-eda-project)
+    - [4. Create Nautobot Credentials](#4-create-nautobot-credentials)
+    - [5. Create a Rulebook Activation](#5-create-a-rulebook-activation)
+    - [6. Test \& Monitor](#6-test--monitor)
   - [📚 Event Structure Reference](#-event-structure-reference)
   - [🔍 Troubleshooting](#-troubleshooting)
     - [Java Not Found](#java-not-found)
@@ -280,27 +281,76 @@ Ensure your decision environment includes:
 - `ansible-rulebook`
 - `networktocode.nautobot` collection (via requirements.yml)
 
-### 2. Create an EDA Project
+### 2. Create a Custom Credential Type (Nautobot)
+
+Before creating credentials, you need to create a custom credential type for Nautobot:
+
+1. Go to **Administration** → **Credential Types** → **Add**
+2. Fill in:
+   - **Name**: `Nautobot API`
+   - **Description**: `Credential for Nautobot API access`
+
+3. **Input Configuration:**
+```yaml
+fields:
+  - id: nautobot_url
+    type: string
+    label: Nautobot URL
+    help_text: The URL of your Nautobot instance (e.g., https://nautobot.example.com)
+  - id: nautobot_token
+    type: string
+    label: Nautobot API Token
+    secret: true
+    help_text: API token for Nautobot authentication
+required:
+  - nautobot_url
+  - nautobot_token
+```
+
+4. **Injector Configuration:**
+```yaml
+env:
+  NAUTOBOT_URL: '{{ nautobot_url }}'
+  NAUTOBOT_TOKEN: '{{ nautobot_token }}'
+```
+
+5. Click **Save**
+
+### 3. Create an EDA Project
 - Point to this Git repository
-- AAP will automatically detect the rulebooks
+- AAP will automatically detect the rulebooks in `extensions/eda/rulebooks/`
 
-### 3. Create Credentials
-Either:
-- **Option A:** Create an EDA credential with environment variables for `NAUTOBOT_URL` and `NAUTOBOT_TOKEN`
-- **Option B:** Pass them as extra vars in the activation
+### 4. Create Nautobot Credentials
 
-### 4. Create a Rulebook Activation
-1. Select your project
-2. Choose a rulebook:
-   - `nautobot-changelog-test.yml` (basic testing)
-   - `nautobot-changelog-aap.yml` (device automation)
-   - `nautobot-changelog-filtered.yml` (filtering examples)
-   - `nautobot-changelog-multi-action.yml` (multiple actions)
-3. Select your decision environment
-4. Add credentials/environment variables
-5. Enable the activation
+Now create the actual credential using your custom type:
 
-### 5. Test & Monitor
+1. Go to **Resources** → **Credentials** → **Add**
+2. Fill in:
+   - **Name**: `Nautobot Production`
+   - **Credential Type**: `Nautobot API` (the type you just created)
+   - **Nautobot URL**: `http://your-nautobot-instance:8080`
+   - **Nautobot API Token**: `your-actual-token-here`
+3. Click **Save**
+
+### 5. Create a Rulebook Activation
+
+1. Go to **Automation Decisions** → **Rulebook Activations** → **Add**
+2. Fill in:
+   - **Name**: `Nautobot Changelog Monitor`
+   - **Project**: Your nautobot-demo project
+   - **Rulebook**: Choose from discovered rulebooks:
+     - `nautobot-changelog-test.yml` (basic testing)
+     - `nautobot-changelog-aap.yml` (device automation)
+     - `nautobot-changelog-filtered.yml` (filtering examples)
+     - `nautobot-changelog-multi-action.yml` (multiple actions)
+   - **Decision Environment**: `Nautobot Decision Environment`
+   - **Credentials**: Select `Nautobot Production` (your Nautobot credential)
+   - **Restart policy**: `On failure`
+   - **Log level**: `Info` (or `Debug` for troubleshooting)
+3. Click **Create rulebook activation**
+4. **Enable** the activation
+
+### 6. Test & Monitor
 - Make changes in Nautobot
 - Monitor the EDA activation logs
 - Verify job templates are triggered with correct variables

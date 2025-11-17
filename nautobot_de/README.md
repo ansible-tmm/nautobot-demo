@@ -39,10 +39,18 @@ A Decision Environment is a container image that includes:
    # Or use Docker Desktop
    ```
 
-3. **Red Hat Registry Login** (for base image):
+3. **For Mac Users with Apple Silicon:**
+
+   AAP runs on x86_64/AMD64 servers. If you're on Apple Silicon (M1/M2/M3), you need to build for the correct architecture:
+
    ```bash
-   podman login registry.redhat.io
-   # Enter your Red Hat credentials
+   # Set podman to use AMD64 emulation
+   podman machine set --rootful
+
+   # Or ensure your podman machine supports multi-arch
+   podman machine stop
+   podman machine rm
+   podman machine init --now --cpus 4 --memory 8192
    ```
 
 ### Build the Image
@@ -52,10 +60,36 @@ A Decision Environment is a container image that includes:
 cd nautobot_de
 
 # Build with ansible-builder
-ansible-builder build -t nautobot-de:latest -v 3
+# IMPORTANT: Use --build-arg to specify the platform for AAP (linux/amd64)
+ansible-builder build \
+  -t nautobot-de:latest \
+  -v 3 \
+  --container-runtime podman \
+  --build-arg EE_BASE_IMAGE=quay.io/ansible/ansible-rulebook:latest \
+  --build-arg PKGMGR_PRESERVE_CACHE=always
 ```
 
-This will create a container image named `nautobot-de:latest`.
+**⚠️ Important for Mac Users (Apple Silicon):**
+
+If you're building on a Mac with Apple Silicon (M1/M2/M3), you MUST build for the linux/amd64 platform since AAP runs on x86_64 servers:
+
+```bash
+# For Apple Silicon Macs - build for x86_64/amd64
+podman build \
+  --platform linux/amd64 \
+  -f context/Containerfile \
+  -t nautobot-de:latest \
+  context/
+
+# Or use buildx with docker
+docker buildx build \
+  --platform linux/amd64 \
+  -f context/Containerfile \
+  -t nautobot-de:latest \
+  context/
+```
+
+This will create a container image named `nautobot-de:latest` compatible with AAP servers.
 
 ## 🚀 Pushing to Quay.io
 
@@ -120,38 +154,75 @@ podman run --rm -it \
    - **Pull**: `Always` or `If not present`
 4. Click **Save**
 
-### 2. Create an EDA Credential
+### 2. Create a Custom Credential Type
 
-1. Go to **Credentials** → **Add**
-2. Name it `Nautobot API`
-3. Credential Type: **Generic**
-4. Add environment variables:
-   ```
-   NAUTOBOT_URL: http://your-nautobot-instance
-   NAUTOBOT_TOKEN: your-api-token
-   ```
+First, create a custom credential type for Nautobot:
 
-### 3. Create an EDA Project
+1. Go to **Administration** → **Credential Types** → **Add**
+2. **Name**: `Nautobot API`
+3. **Input Configuration:**
+```yaml
+fields:
+  - id: nautobot_url
+    type: string
+    label: Nautobot URL
+    help_text: The URL of your Nautobot instance
+  - id: nautobot_token
+    type: string
+    label: Nautobot API Token
+    secret: true
+    help_text: API token for Nautobot authentication
+required:
+  - nautobot_url
+  - nautobot_token
+```
 
-1. Go to **Projects** → **Add**
-2. Point to your Git repository (this repo)
-3. AAP will automatically discover rulebooks in `extensions/eda/rulebooks/`
-4. Save
+4. **Injector Configuration:**
+```yaml
+env:
+  NAUTOBOT_URL: '{{ nautobot_url }}'
+  NAUTOBOT_TOKEN: '{{ nautobot_token }}'
+```
 
-### 4. Create a Rulebook Activation
+5. Click **Save**
 
-1. Go to **Rulebook Activations** → **Add**
-2. Select:
-   - **Project**: Your nautobot-demo project
+### 3. Create the Credential
+
+1. Go to **Resources** → **Credentials** → **Add**
+2. **Name**: `Nautobot Production`
+3. **Credential Type**: `Nautobot API`
+4. **Nautobot URL**: `http://your-nautobot-instance:8080`
+5. **Nautobot API Token**: `your-actual-token`
+6. Click **Save**
+
+### 4. Create an EDA Project
+
+1. Go to **Resources** → **Projects** → **Add**
+2. **Name**: `Nautobot EDA Demo`
+3. **Source Control Type**: `Git`
+4. **Source Control URL**: Your Git repository URL
+5. **Options**: Check `Update Revision on Launch`
+6. Click **Save**
+7. AAP will automatically discover rulebooks in `extensions/eda/rulebooks/`
+
+### 5. Create a Rulebook Activation
+
+1. Go to **Automation Decisions** → **Rulebook Activations** → **Add**
+2. Fill in:
+   - **Name**: `Nautobot Changelog Monitor`
+   - **Project**: `Nautobot EDA Demo`
    - **Rulebook**: Choose from discovered rulebooks:
      - `nautobot-changelog-test.yml` (basic testing)
      - `nautobot-changelog-aap.yml` (device automation)
      - `nautobot-changelog-filtered.yml` (filtering examples)
      - `nautobot-changelog-multi-action.yml` (multiple actions)
    - **Decision Environment**: `Nautobot Decision Environment`
-   - **Credentials**: `Nautobot API`
-3. Enable the activation
-4. Monitor the logs!
+   - **Credentials**: `Nautobot Production`
+   - **Restart policy**: `On failure`
+   - **Log level**: `Info` (or `Debug` for troubleshooting)
+3. Click **Create rulebook activation**
+4. **Enable** the activation
+5. Monitor the logs!
 
 **Note:** AAP automatically discovers rulebooks from `extensions/eda/rulebooks/` directory.
 
@@ -202,20 +273,59 @@ ansible-builder build -t nautobot-de:latest -v 3
 
 ## 🐛 Troubleshooting
 
-### Build Fails - Registry Login
+### ⚠️ "Exec format error" in AAP
+
+**Error:** `exec container process '/opt/builder/bin/entrypoint': Exec format error`
+
+**Cause:** Architecture mismatch - image was built for ARM64 (Apple Silicon) but AAP needs AMD64/x86_64.
+
+**Solution:** Rebuild the image for the correct platform:
+
 ```bash
-# Make sure you're logged in to Red Hat registry
-podman login registry.redhat.io
+cd nautobot_de
+
+# Method 1: Use podman with platform flag
+podman build \
+  --platform linux/amd64 \
+  -f context/Containerfile \
+  -t nautobot-de:latest \
+  context/
+
+# Method 2: Use docker buildx
+docker buildx build \
+  --platform linux/amd64 \
+  -f context/Containerfile \
+  -t nautobot-de:latest \
+  context/
+
+# Then re-tag and push
+podman tag localhost/nautobot-de:latest quay.io/YOUR_USERNAME/nautobot-de:latest
+podman push quay.io/YOUR_USERNAME/nautobot-de:latest --remove-signatures
+```
+
+**Verify the architecture:**
+```bash
+# Check what platform the image is
+podman inspect nautobot-de:latest | grep Architecture
+# Should show: "Architecture": "amd64"
+```
+
+### Build Fails - Missing Context
+```bash
+# Make sure ansible-builder has created the context
+cd nautobot_de
+rm -rf context
+ansible-builder build -t nautobot-de:latest -v 3
 ```
 
 ### Java Not Found in Container
-- Check that `bindep.txt` includes `java-17-openjdk-headless`
-- Rebuild the image
+- The base image `quay.io/ansible/ansible-rulebook:latest` includes Java
+- No additional installation needed
 
 ### Collection Not Found
 ```bash
 # Test if collection is installed in the image
-podman run --rm nautobot-de:latest ansible-galaxy collection list
+podman run --rm --platform linux/amd64 nautobot-de:latest ansible-galaxy collection list
 ```
 
 ### Push Permission Denied
