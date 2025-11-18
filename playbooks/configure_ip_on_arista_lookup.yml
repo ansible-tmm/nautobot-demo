@@ -1,5 +1,4 @@
 ---
-# Alternative version using networktocode.nautobot.lookup plugin instead of uri module
 - name: Configure IP address on Arista device using Nautobot lookup
   hosts: localhost
   gather_facts: false
