@@ -1,4 +1,4 @@
----
-collections:
-  - name: networktocode.nautobot
-    version: ">=5.0.0"
+# ---
+# collections:
+#   - name: networktocode.nautobot
+#     version: ">=5.0.0"
