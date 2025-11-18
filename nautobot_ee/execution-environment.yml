@@ -9,6 +9,13 @@ dependencies:
   galaxy: requirements.yml
   python: requirements.txt
   system: bindep.txt
+  python_interpreter:
+    python_path: /usr/bin/python3.11
+
+additional_build_steps:
+  # Add this section to fix the pathing issue
+  prepend_base:
+    - ENV PKG_CONFIG_PATH=/usr/lib64/pkgconfig:/usr/share/pkgconfig:$PKG_CONFIG_PATH
 
 options:
   package_manager_path: /usr/bin/microdnf

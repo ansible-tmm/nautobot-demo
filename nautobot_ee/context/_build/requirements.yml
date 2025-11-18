@@ -1,0 +1,5 @@
+---
+collections:
+  # Nautobot integration - only thing missing from base EE
+  - name: networktocode.nautobot
+    version: ">=6.0.0"

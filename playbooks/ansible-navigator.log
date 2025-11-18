@@ -1,0 +1,51 @@
+2025-11-18T14:50:26.622511+00:00 WARNING 'ansible_navigator.image_manager.puller._log_message' Image inspection failed, image assumed to be corrupted or missing
+2025-11-18T14:50:26.623877+00:00 WARNING 'ansible_navigator.image_manager.puller._log_message' stdout: []
+
+2025-11-18T14:50:26.623942+00:00 WARNING 'ansible_navigator.image_manager.puller._log_message' stderr: Error: unable to inspect "quay.io/acme_corp/vmware-ee:latest": failed to find image quay.io/acme_corp/vmware-ee:latest: quay.io/acme_corp/vmware-ee:latest: image not known
+
+2025-11-18T14:51:59.010912+00:00 ERROR 'ansible_navigator.actions.images._parse' Unable to extract introspection from stdout
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/ansible_navigator/actions/images.py", line 537, in _parse
+    _warnings, json_str = output.split("{", 1)
+    ^^^^^^^^^^^^^^^^^^^
+ValueError: not enough values to unpack (expected 2, got 1)
+2025-11-18T14:51:59.013440+00:00 ERROR 'ansible_navigator.actions.images._parse' Image introspection failed (parsed), the return value was: Traceback (most recent call last):
+  File "/Users/sean/.cache/ansible-navigator/image_introspect.py", line 16, in <module>
+    from typing import TypeAlias
+ImportError: cannot import name 'TypeAlias' from 'typing' (/usr/lib64/python3.9/typing.py)
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/ansible_navigator/actions/images.py", line 537, in _parse
+    _warnings, json_str = output.split("{", 1)
+    ^^^^^^^^^^^^^^^^^^^
+ValueError: not enough values to unpack (expected 2, got 1)
+2025-11-18T14:52:28.433125+00:00 ERROR 'ansible_navigator.actions.images._parse' Unable to extract introspection from stdout
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/ansible_navigator/actions/images.py", line 565, in _parse
+    parsed = json.loads(json_str)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py", line 353, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ^^^^^^^^^^^^^^^^^^^^^^
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+2025-11-18T14:52:28.438367+00:00 ERROR 'ansible_navigator.actions.images._parse' Image introspection failed (parsed), the return value was: qemu-x86_64-static: QEMU internal SIGSEGV {code=MAPERR, addr=0x20}
+No Python executable found on the system.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/ansible_navigator/actions/images.py", line 565, in _parse
+    parsed = json.loads(json_str)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.11/3.11.6/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py", line 353, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ^^^^^^^^^^^^^^^^^^^^^^
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)

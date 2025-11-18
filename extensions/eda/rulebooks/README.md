@@ -8,80 +8,112 @@ This directory follows the Ansible Automation Platform (AAP) standard for EDA co
 
 ## 📝 Available Rulebooks
 
-### Basic Testing
+### 1. `nautobot-changelog-test.yml` 🧪 **TESTING**
 
-**`nautobot-changelog-test.yml`**
-- Prints all Nautobot changelog events
-- Great for testing connectivity and seeing event structure
-- Use this first to verify your setup
+**Purpose:** Test connectivity and view all Nautobot events
 
-**Usage:**
-```bash
-ansible-rulebook -r extensions/eda/rulebooks/nautobot-changelog-test.yml -i localhost, --verbose --env-vars NAUTOBOT_URL,NAUTOBOT_TOKEN
+**What it does:**
+- Listens for ALL Nautobot changelog events
+- Prints each event to debug output with full details
+- Perfect for verifying your Nautobot connection and API token
+- Shows the exact structure of events you'll work with
+
+**Use case:** Initial setup, troubleshooting, understanding event payloads
+
+**Example output:**
+```yaml
+Got Nautobot changelog event (object_data):
+{
+  'host': '192.168.1.170',
+  'mask_length': 24,
+  'ip_version': 4,
+  'status': '59a147a9-e2c7-4cbf-9da8-13ebd7de57b0',
+  'dns_name': '',
+  'description': '',
+  'created': '2025-11-18T20:30:30.669Z',
+  'last_updated': '2025-11-18T20:30:30.670Z',
+  ...
+}
 ```
 
-### AAP Integration
+**Test it locally:**
+```bash
+ansible-rulebook \
+  -r extensions/eda/rulebooks/nautobot-changelog-test.yml \
+  -i localhost, \
+  --env-vars NAUTOBOT_URL,NAUTOBOT_TOKEN \
+  --verbose
+```
 
-**`nautobot-changelog-aap.yml`**
-- Reacts to device creation/update events
-- Triggers AAP job template "Configure device from Nautobot"
-- Passes device details as extra vars
-- Requires AAP with job templates configured
+---
 
-**Trigger conditions:**
-- Device created (`dcim.device`, `action=create`)
-- Device updated (`dcim.device`, `action=update`)
+### 2. `nautobot-ip-address-trigger.yml` ✅ **PRODUCTION**
 
-**`nautobot-changelog-ipam.yml`**
-- Reacts to IP address creation/update events
-- Triggers IPAM-specific job templates:
-  - "IPAM - New IP Address Validation" (on create)
-  - "IPAM - IP Address Compliance Check" (on update)
-- Passes IP address details (address, prefix, status, DNS name, etc.)
-- Requires AAP with IPAM job templates configured
+**Purpose:** Trigger automation when IP addresses are created or updated in Nautobot
 
-**Trigger conditions:**
-- IP address created (new `event.created` timestamp)
-- IP address updated (`event.last_updated` differs from `event.created`)
+**What it does:**
+- Listens for IP address creation and update events
+- Automatically triggers AAP Job Template: **"Nautobot Job Template"**
+- Passes all IP address details as extra vars to your playbook
 
-### Filtering Examples
+**Use case:** Automate device configuration, validation, or compliance checks when IP addresses are assigned in Nautobot
 
-**`nautobot-changelog-filtered.yml`**
-- Demonstrates filtering by:
-  - Tags (production devices)
-  - Object types (devices, IP addresses, sites, circuits)
-  - Actions (create, update, delete)
-- Multiple rules in one rulebook
-- Debug output for each type
+**Trigger condition:**
+```yaml
+event.host is defined
+and event.ip_version is defined
+and event.mask_length is defined
+```
 
-**Example filters:**
-- Production device changes (tagged with "production")
-- New IP address creation
-- Site changes
-- Circuit changes
-- Any deletion operations
+**Extra vars passed to Job Template:**
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `ip_address` | The IP address | `192.168.1.170` |
+| `mask_length` | Subnet mask length | `24` |
+| `ip_version` | IP version | `4` or `6` |
+| `parent_prefix` | Parent prefix UUID | `a4a5d2dc-...` |
+| `status_id` | Status UUID | `59a147a9-...` |
+| `dns_name` | DNS hostname | `server01.example.com` |
+| `description` | IP description | `Web server` |
+| `role_id` | Role UUID | `0bc9b0f2-...` |
+| `created_timestamp` | Creation time | `2025-11-18T20:30:30.669Z` |
+| `updated_timestamp` | Last update time | `2025-11-18T20:30:30.670Z` |
 
-### Multi-Action Examples
+**Example event that triggers this rulebook:**
+```yaml
+host: 192.168.1.170
+mask_length: 24
+ip_version: 4
+status: 59a147a9-e2c7-4cbf-9da8-13ebd7de57b0
+parent: a4a5d2dc-0e73-481f-add4-0620ce5bbe97
+dns_name: ''
+description: ''
+created: '2025-11-18T20:30:30.669Z'
+last_updated: '2025-11-18T20:30:30.670Z'
+```
 
-**`nautobot-changelog-multi-action.yml`**
-- Shows different action types:
-  - Webhooks via `post_event`
-  - Multiple job templates for different scenarios
-- Device creation → Initial configuration job
-- Device update → Compliance check job
-- IP address creation → IPAM validation job
+---
 
 ## 🔧 Common Event Fields
 
-All events from the Nautobot changelog event source contain `object_data` with these common fields:
+All events from the Nautobot changelog event source contain `object_data` with these fields:
 
 ```yaml
 event:
-  created: "timestamp"
-  last_updated: "timestamp"
-  host: "IP or hostname" (for IP addresses)
-  type: "object type"
-  status: "status UUID"
+  created: "timestamp"           # When object was created
+  last_updated: "timestamp"      # When object was last updated
+  host: "IP address"             # For IP address objects
+  mask_length: 24                # Subnet mask
+  ip_version: 4                  # IPv4 or IPv6
+  status: "status UUID"          # Status identifier
+  parent: "parent UUID"          # Parent object reference
+  role: "role UUID"              # Role identifier (can be null)
+  tenant: "tenant UUID"          # Tenant identifier (can be null)
+  type: "host"                   # Object type
+  dns_name: "hostname"           # DNS name
+  description: "text"            # Description
+  tags: []                       # List of tags
+  custom_fields: {}              # Custom field data
   meta:
     source:
       name: "networktocode.nautobot.nautobot_changelog"
@@ -89,54 +121,87 @@ event:
     uuid: "event UUID"
 ```
 
-Additional fields depend on the object type (device, IP address, prefix, etc.).
-
-## 💡 Customization Tips
-
-### Filter by Object Type
-
-```yaml
-condition: >
-  event.changed_object_type == "dcim.device"        # Devices
-  event.changed_object_type == "ipam.ipaddress"    # IP Addresses
-  event.changed_object_type == "dcim.site"          # Sites
-  event.changed_object_type == "circuits.circuit"   # Circuits
-```
-
-### Filter by Action
-
-```yaml
-condition: >
-  event.action.value == "create"                    # Only creations
-  event.action.value == "update"                    # Only updates
-  event.action.value == "delete"                    # Only deletions
-  event.action.value in ["create", "update"]        # Create OR update
-```
-
-### Filter by Tag
-
-```yaml
-condition: >
-  "production" in event.changed_object.tags         # Has production tag
-```
-
-### Filter by Site
-
-```yaml
-condition: >
-  event.changed_object.site.name == "DC-01"         # Specific site
-```
+---
 
 ## 🚀 Using in AAP
 
-1. **Create a Project** pointing to this repository
-2. AAP will auto-discover these rulebooks
+### Setup Steps
+
+1. **Create a Project** in AAP pointing to this repository
+2. AAP will automatically discover these rulebooks
 3. **Create a Rulebook Activation**:
-   - Select project
-   - Choose rulebook
-   - Add Decision Environment with `networktocode.nautobot` collection
-   - Add credentials for `NAUTOBOT_URL` and `NAUTOBOT_TOKEN`
-4. Enable and monitor!
+   - Select your project
+   - Choose `nautobot-ip-address-trigger.yml`
+   - Select Decision Environment with `networktocode.nautobot` collection
+   - Add credentials with `NAUTOBOT_URL` and `NAUTOBOT_TOKEN`
+4. **Create the Job Template** named "Nautobot Job Template"
+   - Point it to your playbook (e.g., `playbooks/configure_ip_on_arista_lookup.yml`)
+   - Use Execution Environment with `pynautobot` installed
+5. **Enable the Rulebook Activation** and monitor!
+
+### Credentials Setup
+
+Create a custom credential type for Nautobot:
+
+**Input Configuration:**
+```yaml
+fields:
+  - id: nautobot_url
+    type: string
+    label: Nautobot URL
+  - id: nautobot_token
+    type: string
+    label: Nautobot API Token
+    secret: true
+required:
+  - nautobot_url
+  - nautobot_token
+```
+
+**Injector Configuration:**
+```yaml
+env:
+  NAUTOBOT_TOKEN: '{{ nautobot_token }}'
+  NAUTOBOT_URL: '{{ nautobot_url }}'
+```
+
+---
+
+## 💡 Customization Tips
+
+### Modify the Condition
+
+Edit `nautobot-ip-address-trigger.yml` to add additional filters:
+
+**Filter by DNS name:**
+```yaml
+condition: >
+  event.host is defined
+  and event.dns_name != ''
+```
+
+**Filter by status (only active IPs):**
+```yaml
+condition: >
+  event.host is defined
+  and event.status == "59a147a9-e2c7-4cbf-9da8-13ebd7de57b0"
+```
+
+**Filter by parent prefix:**
+```yaml
+condition: >
+  event.host is defined
+  and event.parent == "a4a5d2dc-0e73-481f-add4-0620ce5bbe97"
+```
+
+### Change the Job Template Name
+
+Edit line 17 in `nautobot-ip-address-trigger.yml`:
+```yaml
+name: "Your Custom Job Template Name"
+```
+
+---
 
 ## 📖 Learn More
 

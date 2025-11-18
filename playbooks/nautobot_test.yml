@@ -1,0 +1,127 @@
+---
+- name: Configure IP address on Arista device using Nautobot lookup
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    nautobot_url: "{{ lookup('env', 'NAUTOBOT_URL') }}"
+    nautobot_token: "{{ lookup('env', 'NAUTOBOT_TOKEN') }}"
+    # Default test values (override with -e at runtime)
+    ip_address: "192.168.1.160"
+    mask_length: "24"
+
+  tasks:
+    - name: Look up IP address details using Nautobot lookup plugin
+      ansible.builtin.set_fact:
+        ip_results: >-
+          {{ query(
+            'networktocode.nautobot.lookup',
+            'ip-addresses',
+            api_endpoint=nautobot_url,
+            token=nautobot_token,
+            api_filter='address=' + ip_address + '/' + mask_length
+          ) }}
+
+    - name: Debug - Show lookup results
+      ansible.builtin.debug:
+        var: ip_results
+        verbosity: 1
+
+    - name: Fail if IP not found
+      ansible.builtin.fail:
+        msg: "IP address {{ ip_address }}/{{ mask_length }} not found in Nautobot"
+      when: ip_results | length == 0
+
+    - name: Extract IP object and basic info
+      ansible.builtin.set_fact:
+        ip_obj: "{{ ip_results[0].value }}"
+        dns_name: "{{ ip_results[0].value.dns_name | default('') }}"
+        interface_id: "{{ ip_results[0].value.interfaces[0].id if (ip_results[0].value.interfaces | length > 0) else '' }}"
+
+    - name: Lookup status details
+      ansible.builtin.set_fact:
+        status_results: >-
+          {{ query(
+            'networktocode.nautobot.lookup',
+            'statuses',
+            api_endpoint=nautobot_url,
+            token=nautobot_token,
+            api_filter='id=' + ip_obj.status.id
+          ) }}
+
+    - name: Extract status name
+      ansible.builtin.set_fact:
+        status: "{{ status_results[0].value.name }}"
+      when: status_results | length > 0
+
+    - name: Lookup interface details to get device
+      ansible.builtin.set_fact:
+        interface_results: >-
+          {{ query(
+            'networktocode.nautobot.lookup',
+            'interfaces',
+            api_endpoint=nautobot_url,
+            token=nautobot_token,
+            api_filter='id=' + interface_id
+          ) }}
+      when:
+        - interface_id is defined
+        - interface_id != ''
+
+    - name: Extract interface and device ID from interface lookup
+      ansible.builtin.set_fact:
+        interface_name: "{{ interface_results[0].value.name | default('') }}"
+        device_id: "{{ interface_results[0].value.device.id | default('') }}"
+      when:
+        - interface_results is defined
+        - interface_results | length > 0
+        - interface_results[0].value.device is defined
+
+    - name: Lookup device details
+      ansible.builtin.set_fact:
+        device_results: >-
+          {{ query(
+            'networktocode.nautobot.lookup',
+            'devices',
+            api_endpoint=nautobot_url,
+            token=nautobot_token,
+            api_filter='id=' + device_id
+          ) }}
+      when:
+        - device_id is defined
+        - device_id != ''
+
+    - name: Extract device name and details
+      ansible.builtin.set_fact:
+        device_name: "{{ device_results[0].value.name }}"
+        device_obj: "{{ device_results[0].value }}"
+      when:
+        - device_results is defined
+        - device_results | length > 0
+
+    - name: Debug - Show extracted information
+      ansible.builtin.debug:
+        msg:
+          - "IP Address: {{ ip_address }}/{{ mask_length }}"
+          - "Assigned to Device: {{ device_name | default('NOT ASSIGNED') }}"
+          - "Interface: {{ interface_name | default('N/A') }}"
+          - "Status: {{ status | default('N/A') }}"
+          - "DNS Name: {{ dns_name | default('') }}"
+
+    - name: Extract device management IP
+      ansible.builtin.set_fact:
+        device_mgmt_ip: "{{ device_results[0].value.primary_ip4.address | regex_replace('/.*', '') }}"
+        device_platform: "{{ device_results[0].value.platform.name | default('') }}"
+      when:
+        - device_results is defined
+        - device_results | length > 0
+        - device_results[0].value.primary_ip4 is defined
+        - device_results[0].value.primary_ip4 is not none
+        - device_results[0].value.primary_ip4 != None
+
+    - name: Debug - Show device details
+      ansible.builtin.debug:
+        msg:
+          - "Device Management IP: {{ device_mgmt_ip | default('N/A') }}"
+          - "Device Platform: {{ device_platform | default('N/A') }}"
+      when: device_mgmt_ip is defined

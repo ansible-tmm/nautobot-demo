@@ -1,0 +1,30 @@
+---
+- name: Trigger job template when IP address is created or updated in Nautobot
+  hosts: all
+  sources:
+    - networktocode.nautobot.nautobot_changelog:
+        instance: "{{ NAUTOBOT_URL }}"
+        token: "{{ NAUTOBOT_TOKEN }}"
+        interval: 5   # seconds between polls
+
+  rules:
+    - name: IP address created or updated - trigger Nautobot Job Template
+      condition: >
+        event.host is defined
+        and event.ip_version is defined
+        and event.mask_length is defined
+      action:
+        run_job_template:
+          name: "Nautobot Job Template"
+          organization: "Default"
+          extra_vars:
+            ip_address: "{{ event.host }}"
+            mask_length: "{{ event.mask_length }}"
+            ip_version: "{{ event.ip_version }}"
+            parent_prefix: "{{ event.parent | default('') }}"
+            status_id: "{{ event.status | default('') }}"
+            dns_name: "{{ event.dns_name | default('') }}"
+            description: "{{ event.description | default('') }}"
+            role_id: "{{ event.role | default('') }}"
+            created_timestamp: "{{ event.created | default('') }}"
+            updated_timestamp: "{{ event.last_updated | default('') }}"

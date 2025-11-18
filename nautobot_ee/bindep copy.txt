@@ -1,0 +1,7 @@
+# System dependencies
+python3-pip [platform:rpm]
+libxml2-devel [platform:rpm]
+python3.11-devel [compile platform:rpm]
+pkg-config [compile platform:rpm]
+systemd-devel [compile platform:rpm]
+gcc [compile platform:rpm]

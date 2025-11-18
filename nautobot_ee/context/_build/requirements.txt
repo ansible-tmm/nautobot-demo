@@ -1,0 +1,2 @@
+# Nautobot Python SDK - required by networktocode.nautobot collection
+pynautobot>=2.0.0
