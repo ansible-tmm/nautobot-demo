@@ -7,8 +7,8 @@
     nautobot_url: "{{ lookup('env', 'NAUTOBOT_URL') }}"
     nautobot_token: "{{ lookup('env', 'NAUTOBOT_TOKEN') }}"
     # These come from the EDA event
-    ip_address: "{{ ip_address }}"  # e.g., "192.168.1.160"
-    mask_length: "{{ mask_length }}" # e.g., 24
+    ip_address: "{{ ip_address | default('192.168.1.140') }}"  # e.g., "192.168.1.160"
+    mask_length: "{{ mask_length | default('24') }}" # e.g., 24
 
   tasks:
     - name: Look up IP address details in Nautobot
@@ -85,61 +85,61 @@
       when: device_mgmt_ip is defined
 
 # Now connect to the actual Arista device
-- name: Configure interface on Arista device
-  hosts: all
-  gather_facts: false
-  connection: ansible.netcommon.network_cli
+# - name: Configure interface on Arista device
+#   hosts: all
+#   gather_facts: false
+#   connection: ansible.netcommon.network_cli
 
-  vars:
-    ansible_network_os: arista.eos.eos
-    ansible_user: "{{ lookup('env', 'ARISTA_USERNAME') | default('admin', true) }}"
-    ansible_password: "{{ lookup('env', 'ARISTA_PASSWORD') }}"
-    ansible_become: true
-    ansible_become_method: enable
-    ansible_host: "{{ hostvars['localhost']['device_mgmt_ip'] }}"
-    interface_name: "{{ hostvars['localhost']['interface_name'] }}"
-    ip_address: "{{ hostvars['localhost']['ip_address'] }}"
-    mask_length: "{{ hostvars['localhost']['mask_length'] }}"
+#   vars:
+#     ansible_network_os: arista.eos.eos
+#     ansible_user: "{{ lookup('env', 'ARISTA_USERNAME') | default('admin', true) }}"
+#     ansible_password: "{{ lookup('env', 'ARISTA_PASSWORD') }}"
+#     ansible_become: true
+#     ansible_become_method: enable
+#     ansible_host: "{{ hostvars['localhost']['device_mgmt_ip'] }}"
+#     interface_name: "{{ hostvars['localhost']['interface_name'] }}"
+#     ip_address: "{{ hostvars['localhost']['ip_address'] }}"
+#     mask_length: "{{ hostvars['localhost']['mask_length'] }}"
 
-  tasks:
-    - name: Skip if no management IP found
-      ansible.builtin.meta: end_host
-      when: ansible_host is not defined or ansible_host == ''
+#   tasks:
+#     - name: Skip if no management IP found
+#       ansible.builtin.meta: end_host
+#       when: ansible_host is not defined or ansible_host == ''
 
-    - name: Get current interface configuration
-      arista.eos.eos_command:
-        commands:
-          - "show running-config interface {{ interface_name }}"
-      register: current_config
-      ignore_errors: true
+#     - name: Get current interface configuration
+#       arista.eos.eos_command:
+#         commands:
+#           - "show running-config interface {{ interface_name }}"
+#       register: current_config
+#       ignore_errors: true
 
-    - name: Display current interface config
-      ansible.builtin.debug:
-        var: current_config.stdout_lines
+#     - name: Display current interface config
+#       ansible.builtin.debug:
+#         var: current_config.stdout_lines
 
-    - name: Configure IP address on interface
-      arista.eos.eos_l3_interfaces:
-        config:
-          - name: "{{ interface_name }}"
-            ipv4:
-              - address: "{{ ip_address }}/{{ mask_length }}"
-        state: merged
-      register: config_result
-      when: hostvars['localhost']['status'] == 'Active'
+#     - name: Configure IP address on interface
+#       arista.eos.eos_l3_interfaces:
+#         config:
+#           - name: "{{ interface_name }}"
+#             ipv4:
+#               - address: "{{ ip_address }}/{{ mask_length }}"
+#         state: merged
+#       register: config_result
+#       when: hostvars['localhost']['status'] == 'Active'
 
-    - name: Show configuration result
-      ansible.builtin.debug:
-        var: config_result
-      when: config_result is defined
+#     - name: Show configuration result
+#       ansible.builtin.debug:
+#         var: config_result
+#       when: config_result is defined
 
-    - name: Verify interface configuration
-      arista.eos.eos_command:
-        commands:
-          - "show ip interface {{ interface_name }}"
-      register: interface_status
+#     - name: Verify interface configuration
+#       arista.eos.eos_command:
+#         commands:
+#           - "show ip interface {{ interface_name }}"
+#       register: interface_status
 
-    - name: Display interface status
-      ansible.builtin.debug:
-        msg:
-          - "Interface {{ interface_name }} configuration:"
-          - "{{ interface_status.stdout_lines[0] }}"
+#     - name: Display interface status
+#       ansible.builtin.debug:
+#         msg:
+#           - "Interface {{ interface_name }} configuration:"
+#           - "{{ interface_status.stdout_lines[0] }}"
