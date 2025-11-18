@@ -32,6 +32,18 @@ ansible-rulebook -r extensions/eda/rulebooks/nautobot-changelog-test.yml -i loca
 - Device created (`dcim.device`, `action=create`)
 - Device updated (`dcim.device`, `action=update`)
 
+**`nautobot-changelog-ipam.yml`**
+- Reacts to IP address creation/update events
+- Triggers IPAM-specific job templates:
+  - "IPAM - New IP Address Validation" (on create)
+  - "IPAM - IP Address Compliance Check" (on update)
+- Passes IP address details (address, prefix, status, DNS name, etc.)
+- Requires AAP with IPAM job templates configured
+
+**Trigger conditions:**
+- IP address created (new `event.created` timestamp)
+- IP address updated (`event.last_updated` differs from `event.created`)
+
 ### Filtering Examples
 
 **`nautobot-changelog-filtered.yml`**

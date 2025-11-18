@@ -60,22 +60,51 @@ The demo includes:
 nautobot-demo/
 ├── extensions/eda/rulebooks/          # Rulebooks (AAP EDA standard location)
 │   ├── nautobot-changelog-test.yml    # Basic test rulebook
-│   ├── nautobot-changelog-aap.yml     # AAP job template trigger
+│   ├── nautobot-changelog-aap.yml     # Device automation (job templates)
+│   ├── nautobot-changelog-ipam.yml    # IPAM automation (IP address changes)
 │   ├── nautobot-changelog-filtered.yml # Filtering examples
-│   └── nautobot-changelog-multi-action.yml # Multiple actions
-├── nautobot_de/                        # Decision Environment build files
-│   ├── execution-environment.yml
+│   ├── nautobot-changelog-multi-action.yml # Multiple actions
+│   └── README.md                      # Rulebooks documentation
+├── playbooks/                          # Ansible playbooks (triggered by EDA)
+│   ├── configure_ip_on_arista.yml     # Configure IP on Arista devices
+│   └── README.md                      # Playbook documentation
+├── nautobot_de/                        # Decision Environment (for EDA)
+│   ├── execution-environment.yml      # ansible-rulebook, Java, EDA plugins
 │   ├── requirements.yml
+│   ├── bindep.txt
+│   └── README.md
+├── nautobot_ee/                        # Execution Environment (for playbooks)
+│   ├── execution-environment.yml      # Network collections, pynautobot
+│   ├── requirements.yml
+│   ├── requirements.txt
 │   ├── bindep.txt
 │   └── README.md
 ├── requirements.yml                    # Ansible collection dependencies
 ├── env-template.txt                    # Environment variable template
+├── QUICKSTART.md                       # 5-minute setup guide
+├── LICENSE                             # Apache 2.0 license
 └── README.md                          # This file
 ```
 
 **Why `extensions/eda/rulebooks/`?**
 
 Ansible Automation Platform follows a standard directory structure for EDA content. When you create a Project in AAP that points to this repository, AAP will automatically discover and display rulebooks located in `extensions/eda/rulebooks/`. This is the same structure used by Ansible collections that include EDA content.
+
+**Container Images:**
+
+This repository includes configurations for **two different container images**:
+
+1. **Decision Environment (DE)** - `nautobot_de/`
+   - Used by: **EDA Rulebook Activations**
+   - Contains: ansible-rulebook, Java, EDA event source plugins
+   - Purpose: Listen for Nautobot events and trigger automation
+   - Build guide: `nautobot_de/README.md`
+
+2. **Execution Environment (EE)** - `nautobot_ee/`
+   - Used by: **AAP Job Templates**
+   - Contains: Base AAP EE + networktocode.nautobot collection + pynautobot
+   - Purpose: Run playbooks that configure network devices
+   - Build guide: `nautobot_ee/README.md`
 
 ## 🚀 Prerequisites
 
@@ -190,7 +219,9 @@ Got Nautobot changelog event:
 
 ## 🎯 Advanced Usage with AAP
 
-The `nautobot-changelog-aap.yml` rulebook demonstrates real-world automation:
+### Device Automation
+
+The `nautobot-changelog-aap.yml` rulebook demonstrates device automation:
 
 ```bash
 ansible-rulebook \
@@ -212,6 +243,39 @@ condition: >
   and event.action.value in ["create", "update"]
 ```
 
+### IPAM Automation
+
+The `nautobot-changelog-ipam.yml` rulebook demonstrates IP address automation:
+
+```bash
+ansible-rulebook \
+  -r extensions/eda/rulebooks/nautobot-changelog-ipam.yml \
+  -i localhost, \
+  --verbose \
+  --env-vars NAUTOBOT_URL,NAUTOBOT_TOKEN
+```
+
+**What it does:**
+- Listens for IP address creation or update events
+- Triggers different job templates based on the action:
+  - **New IP**: Runs "IPAM - New IP Address Validation"
+  - **Updated IP**: Runs "IPAM - IP Address Compliance Check"
+- Passes IP details (address, prefix, status, DNS name, role) as extra vars
+
+**Conditions:**
+- New IP: `event.host is defined and event.created is defined`
+- Updated IP: `event.last_updated != event.created`
+
+**How it works:**
+1. EDA detects IP address change in Nautobot
+2. Rulebook triggers "Configure IP on Arista" job template
+3. Playbook queries Nautobot for full device/interface details
+4. Playbook connects to the Arista device
+5. Playbook configures the IP address on the interface
+6. Playbook verifies the configuration
+
+See `playbooks/configure_ip_on_arista.yml` for the complete implementation.
+
 ## 📝 Rulebook Files
 
 All rulebooks are located in `extensions/eda/rulebooks/` (AAP EDA standard location):
@@ -219,7 +283,8 @@ All rulebooks are located in `extensions/eda/rulebooks/` (AAP EDA standard locat
 | File | Purpose |
 |------|---------|
 | `nautobot-changelog-test.yml` | Basic test - prints all events |
-| `nautobot-changelog-aap.yml` | Advanced - triggers AAP job templates on device changes |
+| `nautobot-changelog-aap.yml` | Device automation - triggers job templates on device changes |
+| `nautobot-changelog-ipam.yml` | IPAM automation - triggers job templates on IP address changes |
 | `nautobot-changelog-filtered.yml` | Examples with filters (tags, sites, object types) |
 | `nautobot-changelog-multi-action.yml` | Multiple actions (webhooks, different job templates) |
 
@@ -341,6 +406,7 @@ Now create the actual credential using your custom type:
    - **Rulebook**: Choose from discovered rulebooks:
      - `nautobot-changelog-test.yml` (basic testing)
      - `nautobot-changelog-aap.yml` (device automation)
+     - `nautobot-changelog-ipam.yml` (IPAM/IP address automation)
      - `nautobot-changelog-filtered.yml` (filtering examples)
      - `nautobot-changelog-multi-action.yml` (multiple actions)
    - **Decision Environment**: `Nautobot Decision Environment`

@@ -214,6 +214,7 @@ env:
    - **Rulebook**: Choose from discovered rulebooks:
      - `nautobot-changelog-test.yml` (basic testing)
      - `nautobot-changelog-aap.yml` (device automation)
+     - `nautobot-changelog-ipam.yml` (IPAM/IP address automation)
      - `nautobot-changelog-filtered.yml` (filtering examples)
      - `nautobot-changelog-multi-action.yml` (multiple actions)
    - **Decision Environment**: `Nautobot Decision Environment`
