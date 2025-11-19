@@ -7,8 +7,8 @@
     nautobot_url: "{{ lookup('env', 'NAUTOBOT_URL') }}"
     nautobot_token: "{{ lookup('env', 'NAUTOBOT_TOKEN') }}"
     # Default test values (override with -e at runtime)
-    ip_address: "192.168.1.160"
-    mask_length: "24"
+    ip_address: "{{ ansible_eda.event.host | default('192.168.1.160') }}"
+    mask_length: "ansible_eda.event.mask_length | default('24')"
 
   tasks:
     - name: Look up IP address details using Nautobot lookup plugin
