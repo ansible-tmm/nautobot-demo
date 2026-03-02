@@ -1,6 +1,6 @@
 ---
 - name: Configure IP address on Arista device
-  hosts: "{{ nautobot_device_name | default('localhost') }}"
+  hosts: "{{ nautobot_device_name | default('localhost', true) }}"
   gather_facts: false
   connection: ansible.netcommon.network_cli
   become: true
