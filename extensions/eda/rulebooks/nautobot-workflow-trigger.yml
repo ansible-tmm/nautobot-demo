@@ -1,0 +1,30 @@
+---
+- name: Trigger workflow when IP address is created or assigned to interface
+  hosts: all
+  sources:
+    - networktocode.nautobot.nautobot_changelog:
+        instance: "{{ NAUTOBOT_URL }}"
+        token: "{{ NAUTOBOT_TOKEN }}"
+        interval: 5
+
+  rules:
+    - name: IP address created or updated directly
+      condition: >
+        event.host is defined
+        and event.ip_version is defined
+        and event.mask_length is defined
+      action:
+        run_workflow_template:
+          name: "Nautobot Workflow"
+          organization: "Default"
+
+    - name: Interface updated (IP assigned or removed)
+      condition: >
+        event.device is defined
+        and event.name is defined
+        and event.enabled is defined
+        and event.mgmt_only is defined
+      action:
+        run_workflow_template:
+          name: "Nautobot Workflow"
+          organization: "Default"
