@@ -17,12 +17,6 @@
         run_job_template:
           name: "Nautobot Job Template"
           organization: "Default"
-          extra_vars:
-            event_type: "ip_address"
-            ip_address: "{{ event.host }}"
-            mask_length: "{{ event.mask_length }}"
-            interface_name: ""
-            device_id: ""
 
     - name: Interface updated (IP assigned or removed)
       condition: >
@@ -34,9 +28,3 @@
         run_job_template:
           name: "Nautobot Job Template"
           organization: "Default"
-          extra_vars:
-            event_type: "interface"
-            ip_address: ""
-            mask_length: ""
-            interface_name: "{{ event.name }}"
-            device_id: "{{ event.device }}"

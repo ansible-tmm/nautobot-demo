@@ -6,38 +6,57 @@
   vars:
     nautobot_url: "{{ lookup('env', 'NAUTOBOT_URL') }}"
     nautobot_token: "{{ lookup('env', 'NAUTOBOT_TOKEN') }}"
+    eda_event: "{{ ansible_eda.event | default({}) }}"
 
   tasks:
-    - name: Show incoming event data
+    - name: Dump raw EDA event
+      ansible.builtin.debug:
+        msg: "{{ eda_event }}"
+
+    - name: Determine event type from payload fields
+      ansible.builtin.set_fact:
+        event_type: >-
+          {%- if eda_event.host is defined and eda_event.ip_version is defined -%}
+          ip_address
+          {%- elif eda_event.device is defined and eda_event.name is defined and eda_event.enabled is defined -%}
+          interface
+          {%- else -%}
+          unknown
+          {%- endif -%}
+
+    - name: Show parsed event info
       ansible.builtin.debug:
         msg:
-          - "Event type: {{ event_type | default('unknown') }}"
-          - "IP address: {{ ip_address | default('not provided') }}"
-          - "Mask length: {{ mask_length | default('not provided') }}"
-          - "Interface name: {{ interface_name | default('not provided') }}"
-          - "Device ID: {{ device_id | default('not provided') }}"
+          - "Event type: {{ event_type }}"
+          - "Matched rule: {{ ansible_eda.rule | default('N/A') }}"
 
-    # ── Interface event path: look up the interface, find its IPs ──
+    - name: End play on unknown event type
+      when: event_type == 'unknown'
+      block:
+        - name: Log unknown event
+          ansible.builtin.debug:
+            msg: "Unrecognized event structure - skipping"
+        - name: Stop
+          ansible.builtin.meta: end_play
+
+    # ── Interface event path ──────────────────────────────────────────
     - name: Look up interface by device and name
       ansible.builtin.uri:
-        url: "{{ nautobot_url }}/api/dcim/interfaces/?device_id={{ device_id }}&name={{ interface_name | urlencode }}"
+        url: "{{ nautobot_url }}/api/dcim/interfaces/?device_id={{ eda_event.device }}&name={{ eda_event.name | urlencode }}"
         method: GET
         headers:
           Authorization: "Token {{ nautobot_token }}"
           Accept: "application/json"
         validate_certs: false
       register: intf_lookup
-      when:
-        - event_type | default('') == 'interface'
-        - device_id | default('') != ''
-        - interface_name | default('') != ''
+      when: event_type == 'interface'
 
     - name: Extract interface ID
       ansible.builtin.set_fact:
         found_interface_id: "{{ intf_lookup.json.results[0].id }}"
         found_interface_name: "{{ intf_lookup.json.results[0].name }}"
       when:
-        - intf_lookup is not skipped
+        - event_type == 'interface'
         - intf_lookup.json.count | default(0) | int > 0
 
     - name: Look up IP addresses on this interface
@@ -60,21 +79,25 @@
         - ip_on_intf is not skipped
         - ip_on_intf.json.count | default(0) | int > 0
 
-    - name: No IP found on interface
-      ansible.builtin.debug:
-        msg: "No IP addresses assigned to {{ interface_name }} - nothing to do"
+    - name: End play if interface has no IPs
       when:
-        - event_type | default('') == 'interface'
+        - event_type == 'interface'
         - ip_obj is not defined
+      block:
+        - name: Log no IP on interface
+          ansible.builtin.debug:
+            msg: "No IP addresses assigned to {{ eda_event.name }} - nothing to configure"
+        - name: Stop
+          ansible.builtin.meta: end_play
 
-    - name: End play if interface event with no IP
-      ansible.builtin.meta: end_play
-      when:
-        - event_type | default('') == 'interface'
-        - ip_obj is not defined
+    # ── IP address event path ─────────────────────────────────────────
+    - name: Set IP details from event
+      ansible.builtin.set_fact:
+        ip_address: "{{ eda_event.host }}"
+        mask_length: "{{ eda_event.mask_length | string }}"
+      when: event_type == 'ip_address'
 
-    # ── IP address event path: look up by address ──
-    - name: Look up IP address from Nautobot
+    - name: Look up IP address in Nautobot
       ansible.builtin.set_fact:
         ip_results: >-
           {{ query(
@@ -85,7 +108,7 @@
             api_filter='address=' + ip_address + '/' + mask_length
           ) }}
       when:
-        - event_type | default('') == 'ip_address'
+        - event_type == 'ip_address'
         - ip_address | default('') != ''
 
     - name: Set IP object from direct lookup
@@ -100,7 +123,7 @@
         msg: "IP address {{ ip_address | default('?') }}/{{ mask_length | default('?') }} not found in Nautobot"
       when: ip_obj is not defined
 
-    # ── Common path: we have ip_obj, now get device info ──
+    # ── Common path: resolve device from IP ───────────────────────────
     - name: Extract interface ID from IP object
       ansible.builtin.set_fact:
         resolved_interface_id: "{{ ip_obj.interfaces[0].id }}"
@@ -158,10 +181,10 @@
     - name: Show final results
       ansible.builtin.debug:
         msg:
-          - "Event Type: {{ event_type | default('unknown') }}"
+          - "Event Type: {{ event_type }}"
           - "IP Address: {{ ip_address }}/{{ mask_length }}"
           - "Device: {{ device_name | default('NOT ASSIGNED') }}"
-          - "Interface: {{ resolved_interface_name | default(found_interface_name | default(interface_name | default('N/A'))) }}"
+          - "Interface: {{ resolved_interface_name | default(found_interface_name | default('N/A')) }}"
 
     - name: Extract device management IP
       ansible.builtin.set_fact:
