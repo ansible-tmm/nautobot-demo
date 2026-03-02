@@ -18,6 +18,7 @@
           - "Event type: {{ nautobot_event_type | default('N/A') }}"
 
     - name: Configure IP on interface
+      become: true
       arista.eos.eos_l3_interfaces:
         config:
           - name: "{{ nautobot_interface_name }}"
