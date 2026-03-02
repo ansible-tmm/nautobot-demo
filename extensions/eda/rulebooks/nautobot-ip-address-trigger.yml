@@ -1,14 +1,15 @@
 ---
-- name: Trigger job template when IP address is created or assigned to interface
+- name: Trigger on IP address changes
   hosts: all
   sources:
     - networktocode.nautobot.nautobot_changelog:
         instance: "{{ NAUTOBOT_URL }}"
         token: "{{ NAUTOBOT_TOKEN }}"
         interval: 5
+        query: "changed_object_type=ipam.ipaddress"
 
   rules:
-    - name: IP address created or updated directly
+    - name: IP address created or updated
       condition: >
         event.host is defined
         and event.ip_version is defined
@@ -18,6 +19,16 @@
           name: "Nautobot Job Template"
           organization: "Default"
 
+- name: Trigger on interface changes
+  hosts: all
+  sources:
+    - networktocode.nautobot.nautobot_changelog:
+        instance: "{{ NAUTOBOT_URL }}"
+        token: "{{ NAUTOBOT_TOKEN }}"
+        interval: 5
+        query: "changed_object_type=dcim.interface"
+
+  rules:
     - name: Interface updated (IP assigned or removed)
       condition: >
         event.device is defined
