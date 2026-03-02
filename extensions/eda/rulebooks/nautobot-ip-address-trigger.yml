@@ -1,14 +1,14 @@
 ---
-- name: Trigger job template when IP address is created or updated in Nautobot
+- name: Trigger job template when IP address is created or assigned to interface
   hosts: all
   sources:
     - networktocode.nautobot.nautobot_changelog:
         instance: "{{ NAUTOBOT_URL }}"
         token: "{{ NAUTOBOT_TOKEN }}"
-        interval: 5   # seconds between polls
+        interval: 5
 
   rules:
-    - name: IP address created or updated - trigger Nautobot Job Template
+    - name: IP address created or updated directly
       condition: >
         event.host is defined
         and event.ip_version is defined
@@ -18,13 +18,25 @@
           name: "Nautobot Job Template"
           organization: "Default"
           extra_vars:
+            event_type: "ip_address"
             ip_address: "{{ event.host }}"
             mask_length: "{{ event.mask_length }}"
-            ip_version: "{{ event.ip_version }}"
-            parent_prefix: "{{ event.parent | default('') }}"
-            status_id: "{{ event.status | default('') }}"
-            dns_name: "{{ event.dns_name | default('') }}"
-            description: "{{ event.description | default('') }}"
-            role_id: "{{ event.role | default('') }}"
-            created_timestamp: "{{ event.created | default('') }}"
-            updated_timestamp: "{{ event.last_updated | default('') }}"
+            interface_name: ""
+            device_id: ""
+
+    - name: Interface updated (IP assigned or removed)
+      condition: >
+        event.device is defined
+        and event.name is defined
+        and event.enabled is defined
+        and event.mgmt_only is defined
+      action:
+        run_job_template:
+          name: "Nautobot Job Template"
+          organization: "Default"
+          extra_vars:
+            event_type: "interface"
+            ip_address: ""
+            mask_length: ""
+            interface_name: "{{ event.name }}"
+            device_id: "{{ event.device }}"
