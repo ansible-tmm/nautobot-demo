@@ -178,26 +178,25 @@
         - device_results is defined
         - device_results | length > 0
 
+    - name: Build final interface name
+      ansible.builtin.set_fact:
+        final_interface_name: "{{ resolved_interface_name | default(found_interface_name | default('N/A')) }}"
+
     - name: Show final results
       ansible.builtin.debug:
         msg:
           - "Event Type: {{ event_type }}"
           - "IP Address: {{ ip_address }}/{{ mask_length }}"
           - "Device: {{ device_name | default('NOT ASSIGNED') }}"
-          - "Interface: {{ resolved_interface_name | default(found_interface_name | default('N/A')) }}"
+          - "Interface: {{ final_interface_name }}"
 
-    - name: Extract device management IP
-      ansible.builtin.set_fact:
-        device_mgmt_ip: "{{ device_obj.primary_ip4.address | regex_replace('/.*', '') }}"
-        device_platform: "{{ device_obj.platform.name | default('') }}"
-      when:
-        - device_obj is defined
-        - device_obj.primary_ip4 is defined
-        - device_obj.primary_ip4 is not none
-
-    - name: Show device connection details
-      ansible.builtin.debug:
-        msg:
-          - "Device Management IP: {{ device_mgmt_ip | default('N/A') }}"
-          - "Device Platform: {{ device_platform | default('N/A') }}"
-      when: device_mgmt_ip is defined
+    - name: Save results for downstream workflow nodes
+      ansible.builtin.set_stats:
+        data:
+          nautobot_ip_address: "{{ ip_address }}"
+          nautobot_mask_length: "{{ mask_length }}"
+          nautobot_device_name: "{{ device_name | default('') }}"
+          nautobot_interface_name: "{{ final_interface_name }}"
+          nautobot_device_mgmt_ip: "{{ device_obj.primary_ip4.address | default('') | regex_replace('/.*', '') }}"
+          nautobot_device_platform: "{{ device_obj.platform.name | default('') }}"
+          nautobot_event_type: "{{ event_type }}"

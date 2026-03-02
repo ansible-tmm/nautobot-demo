@@ -1,0 +1,31 @@
+---
+- name: Configure IP address on Arista device
+  hosts: "{{ nautobot_device_name }}"
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+
+  vars:
+    ansible_network_os: arista.eos.eos
+    interface_ip: "{{ nautobot_ip_address }}/{{ nautobot_mask_length }}"
+
+  tasks:
+    - name: Show what we are configuring
+      ansible.builtin.debug:
+        msg:
+          - "Device: {{ inventory_hostname }}"
+          - "Interface: {{ nautobot_interface_name }}"
+          - "IP Address: {{ interface_ip }}"
+          - "Event type: {{ nautobot_event_type | default('N/A') }}"
+
+    - name: Configure IP on interface
+      arista.eos.eos_l3_interfaces:
+        config:
+          - name: "{{ nautobot_interface_name }}"
+            ipv4:
+              - address: "{{ interface_ip }}"
+        state: merged
+      register: config_result
+
+    - name: Show configuration result
+      ansible.builtin.debug:
+        msg: "{{ config_result }}"
