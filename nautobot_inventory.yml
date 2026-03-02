@@ -1,7 +1,5 @@
 ---
 plugin: networktocode.nautobot.gql_inventory
-api_endpoint: "{{ lookup('env', 'NAUTOBOT_URL') }}"
-token: "{{ lookup('env', 'NAUTOBOT_TOKEN') }}"
 validate_certs: false
 
 query:
@@ -9,7 +7,7 @@ query:
     tags: name
     serial:
     tenant: name
-    status: display
+    status: name
     role: name
     location:
       name:
@@ -25,9 +23,9 @@ query:
   virtual_machines:
     tags: name
     tenant: name
-    status: display
+    status: name
 
 group_by:
   - location.name
-  - status.display
+  - status.name
   - role.name

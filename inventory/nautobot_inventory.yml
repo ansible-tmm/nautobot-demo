@@ -7,7 +7,7 @@ query:
     tags: name
     serial:
     tenant: name
-    status: display
+    status: name
     role: name
     location:
       name:
@@ -23,9 +23,9 @@ query:
   virtual_machines:
     tags: name
     tenant: name
-    status: display
+    status: name
 
 group_by:
   - location.name
-  - status.display
+  - status.name
   - role.name
