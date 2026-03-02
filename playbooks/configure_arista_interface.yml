@@ -1,19 +1,6 @@
 ---
-- name: Check if Nautobot data is available
-  hosts: localhost
-  gather_facts: false
-  tasks:
-    - name: End workflow if no device was resolved
-      when: nautobot_device_name | default('') == ''
-      block:
-        - name: Log skip
-          ansible.builtin.debug:
-            msg: "No device resolved from Nautobot event - skipping configuration"
-        - name: Stop
-          ansible.builtin.meta: end_play
-
 - name: Configure IP address on Arista device
-  hosts: "{{ nautobot_device_name }}"
+  hosts: "{{ nautobot_device_name | default('localhost') }}"
   gather_facts: false
   connection: ansible.netcommon.network_cli
   become: true
@@ -21,9 +8,18 @@
 
   vars:
     ansible_network_os: arista.eos.eos
-    interface_ip: "{{ nautobot_ip_address }}/{{ nautobot_mask_length }}"
+    interface_ip: "{{ nautobot_ip_address | default('') }}/{{ nautobot_mask_length | default('') }}"
 
   tasks:
+    - name: Skip if no device was resolved
+      when: nautobot_device_name | default('') == ''
+      block:
+        - name: Log skip
+          ansible.builtin.debug:
+            msg: "No device resolved from Nautobot event - skipping configuration"
+        - name: End play
+          ansible.builtin.meta: end_play
+
     - name: Show what we are configuring
       ansible.builtin.debug:
         msg:
