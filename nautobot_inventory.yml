@@ -1,0 +1,33 @@
+---
+plugin: networktocode.nautobot.gql_inventory
+api_endpoint: "{{ lookup('env', 'NAUTOBOT_URL') }}"
+token: "{{ lookup('env', 'NAUTOBOT_TOKEN') }}"
+validate_certs: false
+
+query:
+  devices:
+    tags: name
+    serial:
+    tenant: name
+    status: display
+    role: name
+    location:
+      name:
+      parent: name
+    platform:
+      napalm_driver:
+      name:
+      network_driver:
+    interfaces:
+      name:
+      ip_addresses:
+        address:
+  virtual_machines:
+    tags: name
+    tenant: name
+    status: display
+
+group_by:
+  - location.name
+  - status.display
+  - role.name

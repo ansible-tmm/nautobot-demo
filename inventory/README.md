@@ -92,7 +92,7 @@ This is the key step that ties everything together.
 | **Source**                 | `Sourced from a Project`                                  |
 | **Credential**             | `Nautobot Credential` (the one created in Step 2)         |
 | **Project**                | `Nautobot Example Project` (or your project name)         |
-| **Inventory file**         | `inventory/nautobot_inventory.yml`                        |
+| **Inventory file**         | `nautobot_inventory.yml` (at project root)                |
 | **Execution Environment**  | `Nautobot EE`                                             |
 
 4. Optionally check **Update on launch** if you want fresh inventory data every time a job runs
