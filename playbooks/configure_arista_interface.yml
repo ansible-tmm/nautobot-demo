@@ -3,6 +3,8 @@
   hosts: "{{ nautobot_device_name }}"
   gather_facts: false
   connection: ansible.netcommon.network_cli
+  become: true
+  become_method: enable
 
   vars:
     ansible_network_os: arista.eos.eos
