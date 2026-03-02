@@ -1,0 +1,597 @@
+ansible-inventory [core 2.16.14]
+  config file = None
+  configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python3.11/site-packages/ansible
+  ansible collection location = /runner/requirements_collections:/root/.ansible/collections:/usr/share/ansible/collections:/usr/share/automation-controller/collections
+  executable location = /usr/local/bin/ansible-inventory
+  python version = 3.11.13 (main, Aug 21 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-11)] (/usr/bin/python3.11)
+  jinja version = 3.1.6
+  libyaml = True
+No config file found; using defaults
+host_list declined parsing /runner/project/LICENSE as it did not pass its verify_file() method
+script declined parsing /runner/project/LICENSE as it did not pass its verify_file() method
+auto declined parsing /runner/project/LICENSE as it did not pass its verify_file() method
+toml declined parsing /runner/project/LICENSE as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse /runner/project/LICENSE with yaml plugin: We were
+unable to read either as JSON nor YAML, these are the errors we got from each:
+JSON: Expecting value: line 1 column 34 (char 33)  Syntax Error while loading
+YAML.   mapping values are not allowed in this context  The error appears to be
+in '/runner/project/LICENSE': line 92, column 36, but may be elsewhere in the
+file depending on the exact syntax problem.  The offending line appears to be:
+modifications, and in Source or Object form, provided that You       meet the
+following conditions:                                    ^ here
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 107, in parse
+    raise AnsibleParserError(e)
+[WARNING]:  * Failed to parse /runner/project/LICENSE with ini plugin:
+/runner/project/LICENSE:1: Expected key=value host variable assignment, got:
+License
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse /runner/project/LICENSE as an inventory source
+host_list declined parsing /runner/project/extensions/eda/rulebooksautobot-changelog-test.yml as it did not pass its verify_file() method
+script declined parsing /runner/project/extensions/eda/rulebooksautobot-changelog-test.yml as it did not pass its verify_file() method
+toml declined parsing /runner/project/extensions/eda/rulebooksautobot-changelog-test.yml as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse
+/runner/project/extensions/eda/rulebooksautobot-changelog-test.yml with auto
+plugin: no root 'plugin' key found,
+'/runner/project/extensions/eda/rulebooksautobot-changelog-test.yml' is not a
+valid YAML inventory plugin config file
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/auto.py", line 48, in parse
+    raise AnsibleParserError("no root 'plugin' key found, '{0}' is not a valid YAML inventory plugin config file".format(path))
+[WARNING]:  * Failed to parse
+/runner/project/extensions/eda/rulebooksautobot-changelog-test.yml with yaml
+plugin: YAML inventory has invalid structure, it should be a dictionary, got:
+<class 'ansible.parsing.yaml.objects.AnsibleSequence'>
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 112, in parse
+    raise AnsibleParserError('YAML inventory has invalid structure, it should be a dictionary, got: %s' % type(data))
+[WARNING]:  * Failed to parse
+/runner/project/extensions/eda/rulebooksautobot-changelog-test.yml with ini
+plugin: Invalid host pattern '---' supplied, '---' is normally a sign this is a
+YAML file.
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse /runner/project/extensions/eda/rulebooksautobot-
+changelog-test.yml as an inventory source
+host_list declined parsing /runner/project/extensions/eda/rulebooksautobot-ip-address-trigger.yml as it did not pass its verify_file() method
+script declined parsing /runner/project/extensions/eda/rulebooksautobot-ip-address-trigger.yml as it did not pass its verify_file() method
+toml declined parsing /runner/project/extensions/eda/rulebooksautobot-ip-address-trigger.yml as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse
+/runner/project/extensions/eda/rulebooksautobot-ip-address-trigger.yml with
+auto plugin: no root 'plugin' key found,
+'/runner/project/extensions/eda/rulebooksautobot-ip-address-trigger.yml' is
+not a valid YAML inventory plugin config file
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/auto.py", line 48, in parse
+    raise AnsibleParserError("no root 'plugin' key found, '{0}' is not a valid YAML inventory plugin config file".format(path))
+[WARNING]:  * Failed to parse
+/runner/project/extensions/eda/rulebooksautobot-ip-address-trigger.yml with
+yaml plugin: YAML inventory has invalid structure, it should be a dictionary,
+got: <class 'ansible.parsing.yaml.objects.AnsibleSequence'>
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 112, in parse
+    raise AnsibleParserError('YAML inventory has invalid structure, it should be a dictionary, got: %s' % type(data))
+[WARNING]:  * Failed to parse
+/runner/project/extensions/eda/rulebooksautobot-ip-address-trigger.yml with
+ini plugin: Invalid host pattern '---' supplied, '---' is normally a sign this
+is a YAML file.
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse /runner/project/extensions/eda/rulebooksautobot-
+ip-address-trigger.yml as an inventory source
+[WARNING]: Unable to parse /runner/project/extensions/eda/rulebooks as an
+inventory source
+[WARNING]: Unable to parse /runner/project/extensions/eda as an inventory
+source
+[WARNING]: Unable to parse /runner/project/extensions as an inventory source
+host_list declined parsing /runner/project/inventoryautobot_inventory.yml as it did not pass its verify_file() method
+script declined parsing /runner/project/inventoryautobot_inventory.yml as it did not pass its verify_file() method
+Using inventory plugin 'ansible_collections.networktocode.nautobot.plugins.inventory.gql_inventory' to process inventory source '/runner/project/inventoryautobot_inventory.yml'
+toml declined parsing /runner/project/inventoryautobot_inventory.yml as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse /runner/project/inventoryautobot_inventory.yml
+with auto plugin: networktocode.nautobot.gql_inventory requires netutils.
+Please pip install netutils.
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/auto.py", line 59, in parse
+    plugin.parse(inventory, loader, path, cache=cache)
+  File "/usr/share/ansible/collections/ansible_collectionsetworktocodeautobot/plugins/inventory/gql_inventory.py", line 626, in parse
+    self.main()
+  File "/usr/share/ansible/collections/ansible_collectionsetworktocodeautobot/plugins/inventory/gql_inventory.py", line 565, in main
+    raise AnsibleError("networktocode.nautobot.gql_inventory requires netutils. Please pip install netutils.")
+[WARNING]:  * Failed to parse /runner/project/inventoryautobot_inventory.yml
+with yaml plugin: Plugin configuration YAML file, not YAML inventory
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 114, in parse
+    raise AnsibleParserError('Plugin configuration YAML file, not YAML inventory')
+[WARNING]:  * Failed to parse /runner/project/inventoryautobot_inventory.yml
+with ini plugin: Invalid host pattern '---' supplied, '---' is normally a sign
+this is a YAML file.
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse /runner/project/inventoryautobot_inventory.yml as
+an inventory source
+[WARNING]: Unable to parse /runner/project/inventory as an inventory source
+host_list declined parsing /runner/projectautobot_de/execution-environment.yml as it did not pass its verify_file() method
+script declined parsing /runner/projectautobot_de/execution-environment.yml as it did not pass its verify_file() method
+[WARNING]: Skipping 'version' as this is not a valid group definition
+[WARNING]: Skipping unexpected key (base_image) in group (images), only "vars",
+"children" and "hosts" are valid
+[WARNING]: Skipping key (galaxy) in group (dependencies) as it is not a
+mapping, it is a <class 'ansible.parsing.yaml.objects.AnsibleUnicode'>
+[WARNING]: Skipping key (system) in group (dependencies) as it is not a
+mapping, it is a <class 'ansible.parsing.yaml.objects.AnsibleUnicode'>
+[WARNING]: Skipping key (prepend_final) in group (additional_build_steps) as it
+is not a mapping, it is a <class
+'ansible.parsing.yaml.objects.AnsibleSequence'>
+[WARNING]: Skipping key (append_final) in group (additional_build_steps) as it
+is not a mapping, it is a <class
+'ansible.parsing.yaml.objects.AnsibleSequence'>
+Parsed /runner/projectautobot_de/execution-environment.yml inventory source with yaml plugin
+host_list declined parsing /runner/projectautobot_de/requirements.yml as it did not pass its verify_file() method
+script declined parsing /runner/projectautobot_de/requirements.yml as it did not pass its verify_file() method
+[WARNING]: Skipping 'collections' as this is not a valid group definition
+Parsed /runner/projectautobot_de/requirements.yml inventory source with yaml plugin
+host_list declined parsing /runner/projectautobot_ee/-a as it did not pass its verify_file() method
+script declined parsing /runner/projectautobot_ee/-a as it did not pass its verify_file() method
+auto declined parsing /runner/projectautobot_ee/-a as it did not pass its verify_file() method
+Parsed /runner/projectautobot_ee/-a inventory source with ini plugin
+host_list declined parsing /runner/projectautobot_ee/ansible as it did not pass its verify_file() method
+script declined parsing /runner/projectautobot_ee/ansible as it did not pass its verify_file() method
+auto declined parsing /runner/projectautobot_ee/ansible as it did not pass its verify_file() method
+Parsed /runner/projectautobot_ee/ansible inventory source with ini plugin
+host_list declined parsing /runner/projectautobot_ee/context/Containerfile as it did not pass its verify_file() method
+script declined parsing /runner/projectautobot_ee/context/Containerfile as it did not pass its verify_file() method
+auto declined parsing /runner/projectautobot_ee/context/Containerfile as it did not pass its verify_file() method
+toml declined parsing /runner/projectautobot_ee/context/Containerfile as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse /runner/projectautobot_ee/context/Containerfile
+with yaml plugin: We were unable to read either as JSON nor YAML, these are the
+errors we got from each: JSON: Expecting value: line 1 column 1 (char 0)
+Syntax Error while loading YAML.   did not find expected <document start>  The
+error appears to be in '/runner/projectautobot_ee/context/Containerfile':
+line 9, column 1, but may be elsewhere in the file depending on the exact
+syntax problem.  The offending line appears to be:  # Base build stage FROM
+$EE_BASE_IMAGE AS base ^ here
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 107, in parse
+    raise AnsibleParserError(e)
+[WARNING]:  * Failed to parse /runner/projectautobot_ee/context/Containerfile
+with ini plugin: /runner/projectautobot_ee/context/Containerfile:9: Expected
+key=value host variable assignment, got: $EE_BASE_IMAGE
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse /runner/projectautobot_ee/context/Containerfile as
+an inventory source
+host_list declined parsing /runner/projectautobot_ee/context/_build/requirements.yml as it did not pass its verify_file() method
+script declined parsing /runner/projectautobot_ee/context/_build/requirements.yml as it did not pass its verify_file() method
+Parsed /runner/projectautobot_ee/context/_build/requirements.yml inventory source with yaml plugin
+host_list declined parsing /runner/projectautobot_ee/context/_build/scripts/assemble as it did not pass its verify_file() method
+auto declined parsing /runner/projectautobot_ee/context/_build/scripts/assemble as it did not pass its verify_file() method
+toml declined parsing /runner/projectautobot_ee/context/_build/scripts/assemble as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/assemble with script plugin:
+Inventory script (/runner/projectautobot_ee/context/_build/scripts/assemble)
+had an execution error: ++ source /etc/os-release +++ NAME='Red Hat Enterprise
+Linux' +++ VERSION='9.6 (Plow)' +++ ID=rhel +++ ID_LIKE=fedora +++
+VERSION_ID=9.6 +++ PLATFORM_ID=platform:el9 +++ PRETTY_NAME='Red Hat Enterprise
+Linux 9.6 (Plow)' +++ ANSI_COLOR='0;31' +++ LOGO=fedora-logo-icon +++
+CPE_NAME=cpe:/o:redhat:enterprise_linux:9::baseos +++
+HOME_URL=https://www.redhat.com/ +++
+DOCUMENTATION_URL=https://access.redhat.com/documentation/en-
+us/red_hat_enterprise_linux/9 +++ BUG_REPORT_URL=https://issues.redhat.com/ +++
+REDHAT_BUGZILLA_PRODUCT='Red Hat Enterprise Linux 9' +++
+REDHAT_BUGZILLA_PRODUCT_VERSION=9.6 +++ REDHAT_SUPPORT_PRODUCT='Red Hat
+Enterprise Linux' +++ REDHAT_SUPPORT_PRODUCT_VERSION=9.6 ++ echo rhel +
+RELEASE=rhel + PKGMGR= + PKGMGR_OPTS= + PKGMGR_PRESERVE_CACHE= +
+PYCMD=/usr/bin/python3 + PIPCMD='/usr/bin/python3 -m pip' + '[' -z ']' +
+PKGMGR=/usr/bin/dnf + '[' -f /usr/bin/microdnf ']' + PKGMGR=/usr/bin/microdnf +
+'[' /usr/bin/microdnf = /usr/bin/microdnf ']' + '[' -z '' ']' + PKGMGR_OPTS='--
+nodocs --setopt install_weak_deps=0' + mkdir -p /output/bindep + mkdir -p
+/output/wheels + mkdir -p /tmp/src + cd /tmp/src + PACKAGES=--list + PIP_OPTS=
++ install_bindep + '[' -f bindep.txt ']' + /usr/bin/python3 -m venv /tmp/venv
+--system-site-packages --without-pip + source /tmp/venv/bin/activate ++
+deactivate nondestructive ++ '[' -n '' ']' ++ '[' -n '' ']' ++ hash -r ++ '['
+-n '' ']' ++ unset VIRTUAL_ENV ++ unset VIRTUAL_ENV_PROMPT ++ '[' '!'
+nondestructive = nondestructive ']' ++ VIRTUAL_ENV=/tmp/venv ++ export
+VIRTUAL_ENV ++
+_OLD_VIRTUAL_PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++
+PATH=/tmp/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+++ export PATH ++ '[' -n '' ']' ++ '[' -z '' ']' ++ _OLD_VIRTUAL_PS1= ++
+PS1='(venv) ' ++ export PS1 ++ VIRTUAL_ENV_PROMPT='(venv) ' ++ export
+VIRTUAL_ENV_PROMPT ++ hash -r + '[' -f /tmp/src/upper-constraints.txt ']' + [[
+-n --list ]] + /usr/bin/python3 -m pip install --cache-dir=/output/wheels
+--list  Usage:      /usr/bin/python3 -m pip install [options] <requirement
+specifier> [package-index-options] ...   /usr/bin/python3 -m pip install
+[options] -r <requirements file> [package-index-options] ...   /usr/bin/python3
+-m pip install [options] [-e] <vcs project url> ...   /usr/bin/python3 -m pip
+install [options] [-e] <local project path> ...   /usr/bin/python3 -m pip
+install [options] <archive url/path> ...  no such option: --list
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/script.py", line 152, in parse
+    raise AnsibleParserError(to_native(e))
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/assemble with yaml plugin:
+We were unable to read either as JSON nor YAML, these are the errors we got
+from each: JSON: Expecting value: line 1 column 1 (char 0)  Syntax Error while
+loading YAML.   did not find expected <document start>  The error appears to be
+in '/runner/projectautobot_ee/context/_build/scripts/assemble': line 27,
+column 1, but may be elsewhere in the file depending on the exact syntax
+problem.  The offending line appears to be:  # manager. PKGMGR="${PKGMGR:-}" ^
+here
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 107, in parse
+    raise AnsibleParserError(e)
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/assemble with ini plugin:
+/runner/projectautobot_ee/context/_build/scripts/assemble:21: Expected
+key=value host variable assignment, got: -ex
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse
+/runner/projectautobot_ee/context/_build/scripts/assemble as an inventory
+source
+host_list declined parsing /runner/projectautobot_ee/context/_build/scripts/check_ansible as it did not pass its verify_file() method
+auto declined parsing /runner/projectautobot_ee/context/_build/scripts/check_ansible as it did not pass its verify_file() method
+toml declined parsing /runner/projectautobot_ee/context/_build/scripts/check_ansible as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/check_ansible with script
+plugin: Inventory script
+(/runner/projectautobot_ee/context/_build/scripts/check_ansible) had an
+execution error: + PYCMD=--list + '[' -z --list ']' + '[' '!' -x --list ']' +
+echo '--list is not an executable' + exit 1
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/script.py", line 152, in parse
+    raise AnsibleParserError(to_native(e))
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/check_ansible with yaml
+plugin: We were unable to read either as JSON nor YAML, these are the errors we
+got from each: JSON: Expecting value: line 1 column 1 (char 0)  Syntax Error
+while loading YAML.   mapping values are not allowed in this context  The error
+appears to be in
+'/runner/projectautobot_ee/context/_build/scripts/check_ansible': line 32,
+column 16, but may be elsewhere in the file depending on the exact syntax
+problem.  The offending line appears to be:  then     echo "Usage:
+check_ansible <PYCMD>"                ^ here
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 107, in parse
+    raise AnsibleParserError(e)
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/check_ansible with ini
+plugin: /runner/projectautobot_ee/context/_build/scripts/check_ansible:26:
+Expected key=value host variable assignment, got: -x
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse
+/runner/projectautobot_ee/context/_build/scripts/check_ansible as an
+inventory source
+host_list declined parsing /runner/projectautobot_ee/context/_build/scripts/check_galaxy as it did not pass its verify_file() method
+auto declined parsing /runner/projectautobot_ee/context/_build/scripts/check_galaxy as it did not pass its verify_file() method
+toml declined parsing /runner/projectautobot_ee/context/_build/scripts/check_galaxy as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/check_galaxy with script
+plugin: failed to parse executable inventory script results from
+/runner/projectautobot_ee/context/_build/scripts/check_galaxy: Expecting
+value: line 1 column 1 (char 0). Expecting value: line 1 column 1 (char 0) +
+ansible-galaxy --version + '[' 0 -ne 0 ']' + exit 0
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/script.py", line 152, in parse
+    raise AnsibleParserError(to_native(e))
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/check_galaxy with yaml
+plugin: YAML inventory has invalid structure, it should be a dictionary, got:
+<class 'ansible.parsing.yaml.objects.AnsibleUnicode'>
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 112, in parse
+    raise AnsibleParserError('YAML inventory has invalid structure, it should be a dictionary, got: %s' % type(data))
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/check_galaxy with ini
+plugin: /runner/projectautobot_ee/context/_build/scripts/check_galaxy:21:
+Expected key=value host variable assignment, got: -x
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse
+/runner/projectautobot_ee/context/_build/scripts/check_galaxy as an inventory
+source
+host_list declined parsing /runner/projectautobot_ee/context/_build/scripts/entrypoint as it did not pass its verify_file() method
+auto declined parsing /runner/projectautobot_ee/context/_build/scripts/entrypoint as it did not pass its verify_file() method
+toml declined parsing /runner/projectautobot_ee/context/_build/scripts/entrypoint as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/entrypoint with script
+plugin: Inventory script
+(/runner/projectautobot_ee/context/_build/scripts/entrypoint) had an
+execution error: /runner/projectautobot_ee/context/_build/scripts/entrypoint:
+line 152: exec: --: invalid option exec: usage: exec [-cl] [-a name] [command
+[argument ...]] [redirection ...]
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/script.py", line 152, in parse
+    raise AnsibleParserError(to_native(e))
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/entrypoint with yaml plugin:
+We were unable to read either as JSON nor YAML, these are the errors we got
+from each: JSON: Expecting value: line 1 column 1 (char 0)  Syntax Error while
+loading YAML.   did not find expected <document start>  The error appears to be
+in '/runner/projectautobot_ee/context/_build/scripts/entrypoint': line 39,
+column 1, but may be elsewhere in the file depending on the exact syntax
+problem.  The offending line appears to be:   : "${EP_DEBUG_TRACE:=0}" ^ here
+This one looks easy to fix. It seems that there is a value started with a
+quote, and the YAML parser is expecting to see the line ended with the same
+kind of quote. For instance:      when: "ok" in result.stdout  Could be written
+as:     when: '"ok" in result.stdout'  Or equivalently:     when: "'ok' in
+result.stdout"
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 107, in parse
+    raise AnsibleParserError(e)
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/entrypoint with ini plugin:
+/runner/projectautobot_ee/context/_build/scripts/entrypoint:33: Expected
+key=value host variable assignment, got: -eu
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse
+/runner/projectautobot_ee/context/_build/scripts/entrypoint as an inventory
+source
+host_list declined parsing /runner/projectautobot_ee/context/_build/scripts/install-from-bindep as it did not pass its verify_file() method
+auto declined parsing /runner/projectautobot_ee/context/_build/scripts/install-from-bindep as it did not pass its verify_file() method
+toml declined parsing /runner/projectautobot_ee/context/_build/scripts/install-from-bindep as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/install-from-bindep with
+script plugin: Inventory script
+(/runner/projectautobot_ee/context/_build/scripts/install-from-bindep) had an
+execution error: + PKGMGR= + PKGMGR_OPTS= + PKGMGR_PRESERVE_CACHE= +
+PYCMD=/usr/bin/python3 + PIPCMD='/usr/bin/python3 -m pip' + PIP_OPTS= + '[' -z
+']' + PKGMGR=/usr/bin/dnf + '[' -f /usr/bin/microdnf ']' +
+PKGMGR=/usr/bin/microdnf + '[' /usr/bin/microdnf = /usr/bin/microdnf ']' + '['
+-z '' ']' + PKGMGR_OPTS='--nodocs --setopt install_weak_deps=0' + '[' -f
+/output/bindep/run.txt ']' + '[' -f /output/bindep/epel.txt ']' + '[' -f
+/output/upper-constraints.txt ']' + '[' -f /output/requirements.txt ']' +
+EXTRAS= + for extra in $* + EXTRAS=' -r /output/--list/requirements.txt' + '['
+-f /output/packages.txt ']' ++ ls -1 '/output/wheels/*whl' ++ wc -l + '[' 0 -gt
+0 ']' + '[' '!' -z ' -r /output/--list/requirements.txt' ']' + /usr/bin/python3
+-m pip uninstall -y -r /output/--list/requirements.txt ERROR: Could not open
+requirements file: [Errno 2] No such file or directory:
+'/output/--list/requirements.txt'
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/script.py", line 152, in parse
+    raise AnsibleParserError(to_native(e))
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/install-from-bindep with
+yaml plugin: We were unable to read either as JSON nor YAML, these are the
+errors we got from each: JSON: Expecting value: line 1 column 1 (char 0)
+Syntax Error while loading YAML.   did not find expected <document start>  The
+error appears to be in
+'/runner/projectautobot_ee/context/_build/scripts/install-from-bindep': line
+20, column 1, but may be elsewhere in the file depending on the exact syntax
+problem.  The offending line appears to be:  # manager. PKGMGR="${PKGMGR:-}" ^
+here
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 107, in parse
+    raise AnsibleParserError(e)
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/install-from-bindep with ini
+plugin: /runner/projectautobot_ee/context/_build/scripts/install-from-
+bindep:17: Expected key=value host variable assignment, got: -ex
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse
+/runner/projectautobot_ee/context/_build/scripts/install-from-bindep as an
+inventory source
+host_list declined parsing /runner/projectautobot_ee/context/_build/scripts/introspect.py as it did not pass its verify_file() method
+script declined parsing /runner/projectautobot_ee/context/_build/scripts/introspect.py as it did not pass its verify_file() method
+auto declined parsing /runner/projectautobot_ee/context/_build/scripts/introspect.py as it did not pass its verify_file() method
+yaml declined parsing /runner/projectautobot_ee/context/_build/scripts/introspect.py as it did not pass its verify_file() method
+toml declined parsing /runner/projectautobot_ee/context/_build/scripts/introspect.py as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/introspect.py with ini
+plugin: /runner/projectautobot_ee/context/_build/scripts/introspect.py:1:
+Expected key=value host variable assignment, got: __future__
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse
+/runner/projectautobot_ee/context/_build/scripts/introspect.py as an
+inventory source
+host_list declined parsing /runner/projectautobot_ee/context/_build/scripts/pip_install as it did not pass its verify_file() method
+auto declined parsing /runner/projectautobot_ee/context/_build/scripts/pip_install as it did not pass its verify_file() method
+toml declined parsing /runner/projectautobot_ee/context/_build/scripts/pip_install as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/pip_install with script
+plugin: Inventory script
+(/runner/projectautobot_ee/context/_build/scripts/pip_install) had an
+execution error: + PYCMD=--list + '[' -z --list ']' + '[' '!' -x --list ']' +
+echo '--list is not an executable' + exit 1
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/script.py", line 152, in parse
+    raise AnsibleParserError(to_native(e))
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/pip_install with yaml
+plugin: We were unable to read either as JSON nor YAML, these are the errors we
+got from each: JSON: Expecting value: line 1 column 1 (char 0)  Syntax Error
+while loading YAML.   mapping values are not allowed in this context  The error
+appears to be in
+'/runner/projectautobot_ee/context/_build/scripts/pip_install': line 32,
+column 16, but may be elsewhere in the file depending on the exact syntax
+problem.  The offending line appears to be:  then     echo "Usage: pip_install
+<PYCMD>"                ^ here
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 107, in parse
+    raise AnsibleParserError(e)
+[WARNING]:  * Failed to parse
+/runner/projectautobot_ee/context/_build/scripts/pip_install with ini plugin:
+/runner/projectautobot_ee/context/_build/scripts/pip_install:26: Expected
+key=value host variable assignment, got: -x
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse
+/runner/projectautobot_ee/context/_build/scripts/pip_install as an inventory
+source
+[WARNING]: Unable to parse /runner/projectautobot_ee/context/_build/scripts
+as an inventory source
+host_list declined parsing /runner/projectautobot_ee/execution-environment.yml as it did not pass its verify_file() method
+script declined parsing /runner/projectautobot_ee/execution-environment.yml as it did not pass its verify_file() method
+[WARNING]: Skipping key (python) in group (dependencies) as it is not a
+mapping, it is a <class 'ansible.parsing.yaml.objects.AnsibleUnicode'>
+[WARNING]: Skipping unexpected key (python_interpreter) in group
+(dependencies), only "vars", "children" and "hosts" are valid
+[WARNING]: Skipping key (prepend_base) in group (additional_build_steps) as it
+is not a mapping, it is a <class
+'ansible.parsing.yaml.objects.AnsibleSequence'>
+[WARNING]: Skipping key (package_manager_path) in group (options) as it is not
+a mapping, it is a <class 'ansible.parsing.yaml.objects.AnsibleUnicode'>
+Parsed /runner/projectautobot_ee/execution-environment.yml inventory source with yaml plugin
+host_list declined parsing /runner/projectautobot_ee/requirements.yml as it did not pass its verify_file() method
+script declined parsing /runner/projectautobot_ee/requirements.yml as it did not pass its verify_file() method
+Parsed /runner/projectautobot_ee/requirements.yml inventory source with yaml plugin
+host_list declined parsing /runner/projectautobot_inventory.yml as it did not pass its verify_file() method
+script declined parsing /runner/projectautobot_inventory.yml as it did not pass its verify_file() method
+Using inventory plugin 'ansible_collections.networktocode.nautobot.plugins.inventory.gql_inventory' to process inventory source '/runner/projectautobot_inventory.yml'
+toml declined parsing /runner/projectautobot_inventory.yml as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse /runner/projectautobot_inventory.yml with auto
+plugin: networktocode.nautobot.gql_inventory requires netutils. Please pip
+install netutils.
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/auto.py", line 59, in parse
+    plugin.parse(inventory, loader, path, cache=cache)
+  File "/usr/share/ansible/collections/ansible_collectionsetworktocodeautobot/plugins/inventory/gql_inventory.py", line 626, in parse
+    self.main()
+  File "/usr/share/ansible/collections/ansible_collectionsetworktocodeautobot/plugins/inventory/gql_inventory.py", line 565, in main
+    raise AnsibleError("networktocode.nautobot.gql_inventory requires netutils. Please pip install netutils.")
+[WARNING]:  * Failed to parse /runner/projectautobot_inventory.yml with yaml
+plugin: Plugin configuration YAML file, not YAML inventory
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 114, in parse
+    raise AnsibleParserError('Plugin configuration YAML file, not YAML inventory')
+[WARNING]:  * Failed to parse /runner/projectautobot_inventory.yml with ini
+plugin: Invalid host pattern '---' supplied, '---' is normally a sign this is a
+YAML file.
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse /runner/projectautobot_inventory.yml as an
+inventory source
+host_list declined parsing /runner/project/playbooks/ansible-navigator.log as it did not pass its verify_file() method
+script declined parsing /runner/project/playbooks/ansible-navigator.log as it did not pass its verify_file() method
+auto declined parsing /runner/project/playbooks/ansible-navigator.log as it did not pass its verify_file() method
+yaml declined parsing /runner/project/playbooks/ansible-navigator.log as it did not pass its verify_file() method
+toml declined parsing /runner/project/playbooks/ansible-navigator.log as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse /runner/project/playbooks/ansible-navigator.log
+with ini plugin: /runner/project/playbooks/ansible-navigator.log:1: Expected
+key=value host variable assignment, got: WARNING
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse /runner/project/playbooks/ansible-navigator.log as
+an inventory source
+host_list declined parsing /runner/project/playbooks/configure_ip_on_arista_lookup.yml as it did not pass its verify_file() method
+script declined parsing /runner/project/playbooks/configure_ip_on_arista_lookup.yml as it did not pass its verify_file() method
+toml declined parsing /runner/project/playbooks/configure_ip_on_arista_lookup.yml as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse
+/runner/project/playbooks/configure_ip_on_arista_lookup.yml with auto plugin:
+no root 'plugin' key found,
+'/runner/project/playbooks/configure_ip_on_arista_lookup.yml' is not a valid
+YAML inventory plugin config file
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/auto.py", line 48, in parse
+    raise AnsibleParserError("no root 'plugin' key found, '{0}' is not a valid YAML inventory plugin config file".format(path))
+[WARNING]:  * Failed to parse
+/runner/project/playbooks/configure_ip_on_arista_lookup.yml with yaml plugin:
+YAML inventory has invalid structure, it should be a dictionary, got: <class
+'ansible.parsing.yaml.objects.AnsibleSequence'>
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 112, in parse
+    raise AnsibleParserError('YAML inventory has invalid structure, it should be a dictionary, got: %s' % type(data))
+[WARNING]:  * Failed to parse
+/runner/project/playbooks/configure_ip_on_arista_lookup.yml with ini plugin:
+Invalid host pattern '---' supplied, '---' is normally a sign this is a YAML
+file.
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse
+/runner/project/playbooks/configure_ip_on_arista_lookup.yml as an inventory
+source
+host_list declined parsing /runner/project/playbooksautobot_test.yml as it did not pass its verify_file() method
+script declined parsing /runner/project/playbooksautobot_test.yml as it did not pass its verify_file() method
+toml declined parsing /runner/project/playbooksautobot_test.yml as it did not pass its verify_file() method
+[WARNING]:  * Failed to parse /runner/project/playbooksautobot_test.yml with
+auto plugin: no root 'plugin' key found,
+'/runner/project/playbooksautobot_test.yml' is not a valid YAML inventory
+plugin config file
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/auto.py", line 48, in parse
+    raise AnsibleParserError("no root 'plugin' key found, '{0}' is not a valid YAML inventory plugin config file".format(path))
+[WARNING]:  * Failed to parse /runner/project/playbooksautobot_test.yml with
+yaml plugin: YAML inventory has invalid structure, it should be a dictionary,
+got: <class 'ansible.parsing.yaml.objects.AnsibleSequence'>
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/yaml.py", line 112, in parse
+    raise AnsibleParserError('YAML inventory has invalid structure, it should be a dictionary, got: %s' % type(data))
+[WARNING]:  * Failed to parse /runner/project/playbooksautobot_test.yml with
+ini plugin: Invalid host pattern '---' supplied, '---' is normally a sign this
+is a YAML file.
+  File "/usr/local/lib/python3.11/site-packages/ansible/inventory/manager.py", line 293, in parse_source
+    plugin.parse(self._inventory, self._loader, source, cache=cache)
+  File "/usr/local/lib/python3.11/site-packages/ansible/plugins/inventory/ini.py", line 138, in parse
+    raise AnsibleParserError(e)
+[WARNING]: Unable to parse /runner/project/playbooksautobot_test.yml as an
+inventory source
+[WARNING]: Unable to parse /runner/project/playbooks as an inventory source
+host_list declined parsing /runner/project/requirements.yml as it did not pass its verify_file() method
+script declined parsing /runner/project/requirements.yml as it did not pass its verify_file() method
+Parsed /runner/project/requirements.yml inventory source with ini plugin
+    7.708 INFO     Processing JSON output...
+    7.709 INFO     Loaded 4 groups, 1 hosts
+    7.754 INFO     Inventory import completed for nautobot source in 0.1s
